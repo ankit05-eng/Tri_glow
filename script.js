@@ -1,321 +1,483 @@
-// ========== DARK MODE ==========
-const darkToggle = document.getElementById('darkToggle');
+/* ══════════════════════════════════════
+   TRIGLOW – Advanced JS
+   All Features: Loader, Cursor, Cart,
+   Coins, AI Bot, Cartoon, YouTube, etc.
+══════════════════════════════════════ */
+
+// ═══ STATE ═══
+let state = {
+  coins: parseInt(localStorage.getItem('tg_coins') || '0'),
+  coinHistory: JSON.parse(localStorage.getItem('tg_coinHistory') || '[]'),
+  cart: JSON.parse(localStorage.getItem('tg_cart') || '[]'),
+  user: JSON.parse(localStorage.getItem('tg_user') || 'null'),
+  coinDiscount: parseFloat(localStorage.getItem('tg_discount') || '0'),
+  reviewRating: 0,
+  chatOpen: false,
+  reviewsOffset: 0,
+};
+
+function saveState() {
+  localStorage.setItem('tg_coins', state.coins);
+  localStorage.setItem('tg_coinHistory', JSON.stringify(state.coinHistory));
+  localStorage.setItem('tg_cart', JSON.stringify(state.cart));
+  localStorage.setItem('tg_user', JSON.stringify(state.user));
+  localStorage.setItem('tg_discount', state.coinDiscount);
+}
+
+// ═══ LOADER ═══
+window.addEventListener('load', () => {
+  const fill = document.getElementById('loaderFill');
+  let prog = 0;
+  const t = setInterval(() => {
+    prog += Math.random() * 18 + 5;
+    if (prog >= 100) { prog = 100; clearInterval(t); }
+    fill.style.width = prog + '%';
+    if (prog === 100) setTimeout(() => document.getElementById('loaderOverlay').classList.add('done'), 400);
+  }, 90);
+});
+
+// ═══ CURSOR ═══
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+function animateCursor() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('button,a,.pcard,.share-btn,.yt-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width = '56px'; ring.style.height = '56px'; ring.style.borderColor = 'var(--g)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; ring.style.borderColor = 'var(--gl)'; });
+});
+
+// ═══ DARK MODE ═══
 const html = document.documentElement;
-
-let isDark = localStorage.getItem('triglow-theme') === 'dark';
+let isDark = localStorage.getItem('tg_theme') === 'dark';
 applyTheme();
-
 function applyTheme() {
   html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  darkToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  const btn = document.getElementById('darkToggle');
+  if (btn) btn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
 }
-
-darkToggle.addEventListener('click', () => {
-  isDark = !isDark;
-  localStorage.setItem('triglow-theme', isDark ? 'dark' : 'light');
-  applyTheme();
+document.getElementById('darkToggle').addEventListener('click', () => {
+  isDark = !isDark; localStorage.setItem('tg_theme', isDark ? 'dark' : 'light'); applyTheme();
 });
 
-// ========== NAVBAR SCROLL ==========
+// ═══ NAVBAR ═══
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 40) {
-    navbar.classList.add('scrolled');
-    document.getElementById('scrollTop').classList.add('visible');
-  } else {
-    navbar.classList.remove('scrolled');
-    document.getElementById('scrollTop').classList.remove('visible');
-  }
-});
-
-// ========== MOBILE MENU ==========
-function toggleMobileMenu() {
-  const navLinks = document.getElementById('navLinks');
-  navLinks.classList.toggle('open');
-}
-function closeMobileMenu() {
-  document.getElementById('navLinks').classList.remove('open');
-}
-
-// ========== SMOOTH NAV SCROLL ==========
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    const target = document.querySelector(link.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-
-// ========== MODAL SYSTEM ==========
-function openModal(id) {
-  const modal = document.getElementById(id);
-  if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-}
-function closeModal(id) {
-  const modal = document.getElementById(id);
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-function closeModalOutside(e, id) {
-  if (e.target === e.currentTarget) closeModal(id);
-}
-
-// ========== LOGIN / SIGNUP TABS ==========
-function switchTab(tab) {
-  const loginForm = document.getElementById('loginForm');
-  const signupForm = document.getElementById('signupForm');
-  const loginTab = document.getElementById('loginTab');
-  const signupTab = document.getElementById('signupTab');
-  if (tab === 'login') {
-    loginForm.style.display = 'block';
-    signupForm.style.display = 'none';
-    loginTab.classList.add('active');
-    signupTab.classList.remove('active');
-  } else {
-    loginForm.style.display = 'none';
-    signupForm.style.display = 'block';
-    signupTab.classList.add('active');
-    loginTab.classList.remove('active');
-  }
-}
-
-function doLogin() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  if (!user || !pass) { showToast('⚠️ Please fill in all fields.'); return; }
-  closeModal('loginModal');
-  showToast(`✅ Welcome back, ${user}!`);
-}
-
-function doSignup() {
-  const name = document.getElementById('signupName').value.trim();
-  const email = document.getElementById('signupEmail').value.trim();
-  const phone = document.getElementById('signupPhone').value.trim();
-  const pass = document.getElementById('signupPass').value.trim();
-  if (!name || !email || !phone || !pass) { showToast('⚠️ Please fill in all fields.'); return; }
-  closeModal('loginModal');
-  showToast(`🎉 Welcome to Triglow, ${name}!`);
-}
-
-// ========== CART ==========
-let cart = [];
-
-function addToCart(name, price) {
-  const existing = cart.find(i => i.name === name);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ name, price, qty: 1 });
-  }
-  updateCartBadge();
-  renderCart();
-  showToast(`🛒 "${name}" added to cart!`);
-}
-
-function updateCartBadge() {
-  const total = cart.reduce((s, i) => s + i.qty, 0);
-  document.getElementById('cartBadge').textContent = total;
-}
-
-function renderCart() {
-  const container = document.getElementById('cartItems');
-  const footer = document.getElementById('cartFooter');
-  const empty = document.getElementById('cartEmpty');
-  container.innerHTML = '';
-  if (cart.length === 0) {
-    footer.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
-  footer.style.display = 'block';
-  let total = 0;
-  cart.forEach((item, idx) => {
-    total += item.price * item.qty;
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <span class="cart-item-name">🍄 ${item.name}</span>
-      <div class="cart-qty">
-        <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
-        <span>${item.qty}</span>
-        <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
-      </div>
-      <span class="cart-item-price">₹${item.price * item.qty}</span>
-    `;
-    container.appendChild(div);
-  });
-  document.getElementById('cartTotal').textContent = `₹${total}`;
-}
-
-function changeQty(idx, delta) {
-  cart[idx].qty += delta;
-  if (cart[idx].qty <= 0) cart.splice(idx, 1);
-  updateCartBadge();
-  renderCart();
-}
-
-function openCart() {
-  renderCart();
-  openModal('cartModal');
-}
-
-function checkout() {
-  if (cart.length === 0) return;
-  showToast('🎉 Order placed! Thank you for choosing Triglow.');
-  cart = [];
-  updateCartBadge();
-  renderCart();
-  setTimeout(() => closeModal('cartModal'), 1200);
-}
-
-// ========== PRODUCT FILTER ==========
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    const filter = this.dataset.filter;
-    document.querySelectorAll('.product-card').forEach(card => {
-      if (filter === 'all' || card.dataset.category === filter) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  });
-});
-
-// ========== SEARCH ==========
-function doSearch() {
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
-  if (!query) {
-    document.querySelectorAll('.product-card').forEach(c => c.style.display = 'flex');
-    document.getElementById('noResults').style.display = 'none';
-    return;
-  }
-  // Scroll to products
-  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-
-  let found = 0;
-  document.querySelectorAll('.product-card').forEach(card => {
-    const text = card.innerText.toLowerCase();
-    if (text.includes(query)) {
-      card.style.display = 'flex';
-      found++;
-    } else {
-      card.style.display = 'none';
-    }
-  });
-  document.getElementById('noResults').style.display = found === 0 ? 'block' : 'none';
-  // Reset filter buttons
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
-}
-
-document.getElementById('searchInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
-
-// ========== STAR RATING ==========
-let selectedRating = 0;
-function setRating(r) {
-  selectedRating = r;
-  const stars = document.querySelectorAll('#starSelect span');
-  stars.forEach((s, i) => {
-    s.classList.toggle('active', i < r);
-  });
-}
-
-// ========== REVIEW SUBMIT ==========
-function submitReview() {
-  const name = document.getElementById('reviewName').value.trim();
-  const text = document.getElementById('reviewText').value.trim();
-  if (!name || !text) { showToast('⚠️ Please fill in your name and review.'); return; }
-  if (selectedRating === 0) { showToast('⭐ Please select a star rating.'); return; }
-  showToast(`🙏 Thank you ${name}! Your review has been submitted.`);
-  document.getElementById('reviewName').value = '';
-  document.getElementById('reviewText').value = '';
-  setRating(0);
-  selectedRating = 0;
-}
-
-// ========== CONTACT SUBMIT ==========
-function submitContact() {
-  const name = document.getElementById('cName').value.trim();
-  const email = document.getElementById('cEmail').value.trim();
-  const phone = document.getElementById('cPhone').value.trim();
-  const msg = document.getElementById('cMessage').value.trim();
-  if (!name || !email || !msg) { showToast('⚠️ Please fill in required fields.'); return; }
-  showToast(`✅ Message sent! We'll get back to you soon, ${name}.`);
-  document.getElementById('cName').value = '';
-  document.getElementById('cEmail').value = '';
-  document.getElementById('cPhone').value = '';
-  document.getElementById('cMessage').value = '';
-}
-
-// ========== TOAST ==========
-let toastTimer;
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
-}
-
-// ========== SCROLL REVEAL ==========
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.12 });
-
-function setupReveal() {
-  const targets = [
-    '.product-card', '.benefit-card', '.team-card',
-    '.review-card', '.gallery-item', '.contact-item',
-    '.about-story', '.feature-item'
-  ];
-  targets.forEach(sel => {
-    document.querySelectorAll(sel).forEach((el, i) => {
-      el.classList.add('reveal');
-      el.style.transitionDelay = `${i * 60}ms`;
-      revealObserver.observe(el);
-    });
-  });
-}
-
-// ========== ACTIVE NAV HIGHLIGHT ==========
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 100) current = sec.getAttribute('id');
-  });
-  navLinks.forEach(link => {
-    link.style.color = '';
-    link.style.fontWeight = '';
-    if (link.getAttribute('href') === `#${current}`) {
-      link.style.color = 'var(--primary)';
-      link.style.fontWeight = '600';
-    }
-  });
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('scrollTopBtn').classList.toggle('show', window.scrollY > 300);
+  updateActiveSideNav();
 }, { passive: true });
 
-// ========== INIT ==========
-document.addEventListener('DOMContentLoaded', () => {
-  setupReveal();
-  renderCart();
+function toggleNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+function scrollTo(selector) {
+  const el = document.querySelector(selector);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ═══ ACTIVE NAV ═══
+function updateActiveSideNav() {
+  const secs = document.querySelectorAll('section[id]');
+  const sideLinks = document.querySelectorAll('.desktop-sidenav a');
+  let current = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  sideLinks.forEach(l => {
+    l.style.background = '';
+    l.style.color = '';
+    if (l.getAttribute('href') === '#' + current) {
+      l.style.background = 'var(--g)';
+      l.style.color = '#fff';
+    }
+  });
+}
+
+// ═══ PARTICLES ═══
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+for (let i = 0; i < 55; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 2.5 + 0.5,
+    dx: (Math.random() - 0.5) * 0.4,
+    dy: (Math.random() - 0.5) * 0.4,
+    o: Math.random() * 0.5 + 0.1
+  });
+}
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const isDk = document.documentElement.getAttribute('data-theme') === 'dark';
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = isDk ? `rgba(165,214,167,${p.o})` : `rgba(46,139,64,${p.o})`;
+    ctx.fill();
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ═══ COUNTER ANIMATION ═══
+const counters = document.querySelectorAll('.stat-number');
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      let count = 0;
+      const step = target / 60;
+      const t = setInterval(() => {
+        count = Math.min(count + step, target);
+        el.textContent = Math.floor(count) + (target === 100 ? '%' : '+');
+        if (count >= target) clearInterval(t);
+      }, 22);
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObs.observe(c));
+
+// ═══ SCROLL REVEAL ═══
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.pcard,.bcard,.rcard,.ci-item,.stat-card,.gm-item,.yt-card,.math-step,.cb-left,.cb-center,.cb-right').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.style.transitionDelay = (i % 6) * 60 + 'ms';
+  revealObs.observe(el);
 });
+
+// ═══ PRODUCT FILTER ═══
+document.querySelectorAll('.pf-btn').forEach(btn => {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.pf-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const f = this.dataset.f;
+    document.querySelectorAll('.pcard').forEach(c => {
+      c.style.display = (f === 'all' || c.dataset.cat === f) ? 'flex' : 'none';
+    });
+  });
+});
+
+// ═══ SEARCH ═══
+function doSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.getElementById('noResults').style.display = 'none';
+  document.querySelectorAll('.pf-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.pf-btn[data-f="all"]').classList.add('active');
+  if (!q) { document.querySelectorAll('.pcard').forEach(c => c.style.display = 'flex'); return; }
+  scrollTo('#products');
+  let found = 0;
+  document.querySelectorAll('.pcard').forEach(c => {
+    const show = c.innerText.toLowerCase().includes(q);
+    c.style.display = show ? 'flex' : 'none';
+    if (show) found++;
+  });
+  if (!found) document.getElementById('noResults').style.display = 'block';
+}
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+// ═══ FLOATING WINDOWS ═══
+function openWindow(id) {
+  document.querySelectorAll('.fwindow').forEach(w => { if (w.id !== id) w.classList.remove('open'); });
+  const w = document.getElementById(id);
+  if (w) { w.classList.toggle('open'); if (id === 'cartWindow') renderCart(); if (id === 'coinsWindow') renderCoinWindow(); }
+}
+function closeWindow(id) {
+  const w = document.getElementById(id);
+  if (w) w.classList.remove('open');
+}
+document.querySelectorAll('.fwindow').forEach(w => {
+  w.addEventListener('click', e => { if (e.target === w) w.classList.remove('open'); });
+});
+
+// ═══ AUTH ═══
+function authTab(tab) {
+  document.getElementById('authLoginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('authSignupForm').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('atLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('atSignup').classList.toggle('active', tab === 'signup');
+}
+function doLogin() {
+  const u = document.getElementById('liUser').value.trim();
+  const p = document.getElementById('liPass').value.trim();
+  if (!u || !p) { toast('⚠️ Please fill in all fields'); return; }
+  state.user = { name: u };
+  saveState();
+  document.getElementById('navUserLabel').textContent = u;
+  closeWindow('authWindow');
+  toast(`✅ Welcome back, ${u}! 🍄`);
+}
+function doSignup() {
+  const n = document.getElementById('suName').value.trim();
+  const e = document.getElementById('suEmail').value.trim();
+  const ph = document.getElementById('suPhone').value.trim();
+  const p = document.getElementById('suPass').value.trim();
+  if (!n || !e || !ph || !p) { toast('⚠️ Please fill in all fields'); return; }
+  state.user = { name: n };
+  state.coins += 50;
+  addCoinHistory('🎁 Welcome Bonus', 50);
+  saveState();
+  document.getElementById('navUserLabel').textContent = n;
+  closeWindow('authWindow');
+  updateCoinsUI();
+  toast(`🎉 Welcome to Triglow, ${n}! You earned 50 bonus coins! 🪙`);
+}
+
+// ═══ CART ═══
+function addToCart(name, price, emoji) {
+  const ex = state.cart.find(i => i.name === name);
+  if (ex) ex.qty++;
+  else state.cart.push({ name, price, emoji, qty: 1 });
+  saveState();
+  updateCartBadge();
+  toast(`🛒 ${emoji} "${name}" added to cart!`);
+  // Animate cart button
+  const cartFab = document.querySelector('.cart-fab');
+  cartFab.style.transform = 'scale(1.25)';
+  setTimeout(() => cartFab.style.transform = '', 300);
+}
+function updateCartBadge() {
+  const total = state.cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cartPip').textContent = total;
+}
+function renderCart() {
+  const list = document.getElementById('cartItemsList');
+  const empty = document.getElementById('cartEmptyMsg');
+  const summary = document.getElementById('cartSummary');
+  list.innerHTML = '';
+  if (!state.cart.length) { empty.style.display = 'block'; summary.style.display = 'none'; return; }
+  empty.style.display = 'none'; summary.style.display = 'block';
+  let sub = 0;
+  state.cart.forEach((item, i) => {
+    sub += item.price * item.qty;
+    const div = document.createElement('div');
+    div.className = 'cart-item-row';
+    div.innerHTML = `
+      <span class="cir-emoji">${item.emoji}</span>
+      <span class="cir-name">${item.name}</span>
+      <div class="cir-qty">
+        <button class="cqb" onclick="changeQty(${i},-1)">−</button>
+        <span>${item.qty}</span>
+        <button class="cqb" onclick="changeQty(${i},1)">+</button>
+      </div>
+      <span class="cir-price">₹${item.price * item.qty}</span>
+    `;
+    list.appendChild(div);
+  });
+  document.getElementById('cSubtotal').textContent = '₹' + sub;
+  const discountRow = document.getElementById('discountRow');
+  const discAmt = document.getElementById('discountAmt');
+  const notice = document.getElementById('csCoinsNotice');
+  const coinDisc = Math.floor(state.coins / 100) * 5;
+  const total = Math.max(0, sub - (state.coinDiscount || 0));
+  document.getElementById('cTotal').textContent = '₹' + total;
+  if (state.coinDiscount > 0) {
+    discountRow.style.display = 'flex';
+    discAmt.textContent = '-₹' + state.coinDiscount;
+  } else {
+    discountRow.style.display = 'none';
+  }
+  if (coinDisc > 0 && !state.coinDiscount) {
+    notice.textContent = `🪙 You have ${state.coins} coins = ₹${coinDisc} discount available! Click "Redeem Coins" in Earn section.`;
+  } else if (state.coinDiscount) {
+    notice.textContent = `✅ ₹${state.coinDiscount} coin discount applied!`;
+  } else {
+    notice.textContent = '';
+  }
+}
+function changeQty(i, d) {
+  state.cart[i].qty += d;
+  if (state.cart[i].qty <= 0) state.cart.splice(i, 1);
+  saveState(); updateCartBadge(); renderCart();
+}
+function checkout() {
+  if (!state.cart.length) return;
+  const total = state.cart.reduce((s, i) => s + i.price * i.qty, 0) - (state.coinDiscount || 0);
+  const redeemed = state.coinDiscount > 0 ? Math.floor(state.coinDiscount / 5) * 100 : 0;
+  if (redeemed > 0) { state.coins -= redeemed; }
+  state.coinDiscount = 0;
+  state.cart = [];
+  saveState(); updateCartBadge(); updateCoinsUI();
+  closeWindow('cartWindow');
+  toast(`🎉 Order placed for ₹${Math.max(0,total)}! Thank you for choosing Triglow! 🍄`);
+}
+
+// ═══ COINS ═══
+function shareOn(platform) {
+  const urls = {
+    whatsapp: 'https://wa.me/?text=' + encodeURIComponent('🍄 Check out Triglow — fresh organic mushrooms from Odisha! 🌿 https://triglow.in'),
+    facebook: 'https://www.facebook.com/sharer/sharer.php?u=https://triglow.in',
+    instagram: 'https://instagram.com',
+    twitter: 'https://twitter.com/intent/tweet?text=' + encodeURIComponent('🍄 Fresh mushrooms from Triglow Farm, Odisha! Organic & farm-fresh. 🌿 https://triglow.in'),
+    telegram: 'https://t.me/share/url?url=https://triglow.in&text=' + encodeURIComponent('Check out Triglow Farm!')
+  };
+  window.open(urls[platform] || '#', '_blank');
+  state.coins += 10;
+  addCoinHistory(`📣 Shared on ${capitalize(platform)}`, 10);
+  saveState(); updateCoinsUI();
+  toast(`🪙 +10 coins earned for sharing on ${capitalize(platform)}!`);
+  coinBurst();
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function addCoinHistory(label, amount) {
+  state.coinHistory.unshift({ label, amount, time: new Date().toLocaleTimeString() });
+  if (state.coinHistory.length > 20) state.coinHistory.pop();
+}
+
+function updateCoinsUI() {
+  // Nav
+  document.getElementById('navCoins').textContent = state.coins;
+  // Wallet card
+  if (document.getElementById('walletBal')) {
+    document.getElementById('walletBal').textContent = state.coins;
+    const rs = (state.coins / 100 * 5).toFixed(2);
+    document.getElementById('walletRs').textContent = rs;
+    const prog = (state.coins % 100);
+    document.getElementById('walletBarFill').style.width = prog + '%';
+    document.getElementById('walletBarText').textContent = `${prog} / 100 to next ₹5`;
+    const redeemBtn = document.getElementById('redeemBtn');
+    if (redeemBtn) redeemBtn.disabled = state.coins < 100;
+  }
+}
+
+function redeemCoins() {
+  if (state.coins < 100) { toast('⚠️ You need at least 100 coins to redeem'); return; }
+  const redeemable = Math.floor(state.coins / 100) * 100;
+  const discount = (redeemable / 100) * 5;
+  state.coinDiscount = discount;
+  saveState(); updateCoinsUI();
+  toast(`✅ ₹${discount} discount applied to your cart! 🎉`);
+  openWindow('cartWindow');
+}
+
+function renderCoinWindow() {
+  document.getElementById('cwBalNum').textContent = state.coins;
+  document.getElementById('cwWorth').textContent = (state.coins / 100 * 5).toFixed(2);
+  const prog = (state.coins % 100);
+  document.getElementById('cwProgFill').style.width = prog + '%';
+  document.getElementById('cwProgText').textContent = `${prog} / 100 coins`;
+  const hist = document.getElementById('cwHistory');
+  if (!state.coinHistory.length) {
+    hist.innerHTML = '<div class="cwh-empty">No coins earned yet. Start sharing!</div>';
+    return;
+  }
+  hist.innerHTML = state.coinHistory.map(h => `
+    <div class="cwh-item">
+      <span>${h.label}</span>
+      <span class="cwh-earn">+${h.amount} 🪙</span>
+    </div>
+  `).join('');
+}
+
+function coinBurst() {
+  const btn = document.querySelector('.coins-wallet') || document.body;
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem;z-index:9999;pointer-events:none;animation:coinBurstAnim .8s ease forwards;';
+  el.textContent = '🪙';
+  const style = document.createElement('style');
+  style.textContent = '@keyframes coinBurstAnim{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-150%) scale(2);}}';
+  document.head.appendChild(style);
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
+
+// ═══ YOUTUBE ═══
+function loadYT(placeholder, videoId) {
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+  iframe.allowFullscreen = true;
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:16px 16px 0 0;';
+  placeholder.parentElement.appendChild(iframe);
+  placeholder.remove();
+}
+function loadYTMain(videoId, title) {
+  const mainWrap = document.querySelector('.yt-embed-wrap');
+  mainWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe>`;
+  mainWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ═══ GALLERY LIGHTBOX ═══
+function openLightbox(emoji, caption) {
+  document.getElementById('lbEmoji').textContent = emoji;
+  document.getElementById('lbCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// ═══ REVIEWS SLIDER ═══
+function scrollReviews(dir) {
+  const track = document.getElementById('reviewsTrack');
+  const cardW = 300;
+  state.reviewsOffset = Math.max(0, Math.min(state.reviewsOffset + dir, 4));
+  track.style.transform = `translateX(-${state.reviewsOffset * cardW}px)`;
+}
+
+// ═══ STAR RATING ═══
+function pickStar(n) {
+  state.reviewRating = n;
+  document.querySelectorAll('#starPicker span').forEach((s, i) => {
+    s.classList.toggle('lit', i < n);
+  });
+}
+
+function submitReview() {
+  const name = document.getElementById('rvName').value.trim();
+  const text = document.getElementById('rvText').value.trim();
+  if (!name || !text) { toast('⚠️ Please fill in name and review'); return; }
+  if (!state.reviewRating) { toast('⭐ Please select a star rating'); return; }
+  // Add to track
+  const track = document.getElementById('reviewsTrack');
+  const stars = '★'.repeat(state.reviewRating) + '☆'.repeat(5 - state.reviewRating);
+  const card = document.createElement('div');
+  card.className = 'rcard reveal visible';
+  card.innerHTML = `<div class="rcard-stars">${stars}</div><p>"${text}"</p><div class="rcard-user"><div class="rcu-av">${name[0].toUpperCase()}</div><div><strong>${name}</strong><span>Just now</span></div></div>`;
+  track.appendChild(card);
+  // Reward coins
+  state.coins += 5;
+  addCoinHistory('⭐ Left a review', 5);
+  saveState(); updateCoinsUI();
+  document.getElementById('rvName').value = '';
+  document.getElementById('rvText').value = '';
+  pickStar(0); state.reviewRating = 0;
+  toast(`🙏 Thank you ${name}! Review posted & +5 coins earned! 🪙`);
+}
+
+// ═══ CONTACT ═══
+function sendContact() {
+  const n = document.getElementById('cfName').value.trim();
+  const e = document.getElementById('cfEmail').value.trim();
+  const m = document.getElementById('cfMsg').value.trim();
+  if (!n || !e || !m) { toast('⚠️ Please fill in required fields'); return; }
+  document.getElementById('cfName').value = '';
+  document.getElementById('cfEmail').value = '';
+  document.getElementById('cfPhone').value = '';
+  document.getElementById('cfMsg').value = '';
+  toast(`✅ Message sent! We'll get back to you soon, ${n} 🍄`);
+}
+
+// ═══ AI CHATBOT ═══
+const botKB = {
+  'mushroom': 'We grow 🍄 Fresh White Button, Premium Button, Oyster, Milky mushrooms + combo packs. All fresh from our Pokatunga farm!',
+  'product': 'We sell: 🍄 Button Mushrooms (₹45–₹85), 🫧 Oyster Mushrooms (₹55), 🍃 Milky Mushrooms (₹65), and 🧺 Family Combos (₹160).',
+  'price': 'Our prices: Button 250g = ₹45, Button 500g = ₹8
