@@ -1,717 +1,849 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triglow – Fresh Mushrooms from Odisha</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Triglow – Premium Mushrooms from Odisha</title>
+  <link rel="stylesheet" href="style.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
 
-  <!-- ========== NAVBAR ========== -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-brand">
-      <span class="brand-icon">🍄</span>
-      <span class="brand-name">Triglow</span>
-    </div>
+<!-- ██████ PARTICLE CANVAS ██████ -->
+<canvas id="particleCanvas"></canvas>
 
-    <div class="nav-search">
-      <input type="text" id="searchInput" placeholder="Search mushrooms, varieties, products..." />
-      <button class="search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
-    </div>
+<!-- ██████ CUSTOM CURSOR ██████ -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-    <div class="nav-actions">
-      <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">
-        <i class="fas fa-moon"></i>
-      </button>
-      <button class="nav-btn" onclick="openModal('loginModal')"><i class="fas fa-user"></i> Login</button>
-      <button class="cart-btn" onclick="openCart()">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-badge" id="cartBadge">0</span>
-      </button>
-      <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
-        <span></span><span></span><span></span>
+<!-- ██████ LOADER ██████ -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader-inner">
+    <div class="loader-mush">🍄</div>
+    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+    <p class="loader-text">Growing fresh for you...</p>
+  </div>
+</div>
+
+<!-- ██████ NAVBAR ██████ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-left">
+    <div class="nav-brand" onclick="scrollTo('#home')">
+      <div class="brand-logo">🍄</div>
+      <div class="brand-text">
+        <span class="brand-name">Triglow</span>
+        <span class="brand-tagline">Farm Fresh</span>
       </div>
     </div>
+  </div>
 
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
-      <li><a href="#products" onclick="closeMobileMenu()">Products</a></li>
-      <li><a href="#benefits" onclick="closeMobileMenu()">Benefits</a></li>
-      <li><a href="#gallery" onclick="closeMobileMenu()">Gallery</a></li>
-      <li><a href="#about" onclick="closeMobileMenu()">About Us</a></li>
-      <li><a href="#reviews" onclick="closeMobileMenu()">Reviews</a></li>
-      <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
-    </ul>
-  </nav>
-
-  <!-- ========== HERO ========== -->
-  <section class="hero" id="home">
-    <div class="hero-bg-shapes">
-      <div class="shape s1"></div>
-      <div class="shape s2"></div>
-      <div class="shape s3"></div>
+  <div class="nav-search-wrap">
+    <div class="nav-search" id="navSearch">
+      <i class="fas fa-search search-ico"></i>
+      <input type="text" id="searchInput" placeholder="Search mushrooms..."/>
+      <button class="search-go" onclick="doSearch()">Search</button>
     </div>
-    <div class="hero-content">
-      <div class="hero-badge"><i class="fas fa-leaf"></i> 100% Organic & Farm Fresh</div>
-      <h1 class="hero-title">
-        <span>Nature's Finest</span>
-        <span class="accent">Mushrooms</span>
-        <span>Grown With Love</span>
+  </div>
+
+  <div class="nav-right">
+    <button class="icon-btn dark-btn" id="darkToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+
+    <div class="coin-display" onclick="openWindow('coinsWindow')" title="Your Coins">
+      <span class="coin-icon">🪙</span>
+      <span class="coin-count" id="navCoins">0</span>
+    </div>
+
+    <button class="nav-login-btn" onclick="openWindow('authWindow')">
+      <i class="fas fa-user-circle"></i> <span id="navUserLabel">Login</span>
+    </button>
+
+    <button class="cart-fab" onclick="openWindow('cartWindow')">
+      <i class="fas fa-shopping-basket"></i>
+      <span class="cart-pip" id="cartPip">0</span>
+    </button>
+
+    <button class="ham-btn" id="hamBtn" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#home" onclick="toggleNav()">Home</a>
+    <a href="#products" onclick="toggleNav()">Products</a>
+    <a href="#benefits" onclick="toggleNav()">Benefits</a>
+    <a href="#gallery" onclick="toggleNav()">Gallery</a>
+    <a href="#about" onclick="toggleNav()">About Us</a>
+    <a href="#youtube" onclick="toggleNav()">Watch</a>
+    <a href="#contact" onclick="toggleNav()">Contact</a>
+  </div>
+</nav>
+
+<div class="desktop-sidenav">
+  <a href="#home" data-tip="Home"><i class="fas fa-home"></i></a>
+  <a href="#products" data-tip="Products"><i class="fas fa-leaf"></i></a>
+  <a href="#benefits" data-tip="Benefits"><i class="fas fa-heart"></i></a>
+  <a href="#gallery" data-tip="Gallery"><i class="fas fa-images"></i></a>
+  <a href="#youtube" data-tip="Watch Us"><i class="fab fa-youtube"></i></a>
+  <a href="#about" data-tip="About Us"><i class="fas fa-users"></i></a>
+  <a href="#reviews" data-tip="Reviews"><i class="fas fa-star"></i></a>
+  <a href="#contact" data-tip="Contact"><i class="fas fa-phone"></i></a>
+</div>
+
+<!-- ██████ HERO ██████ -->
+<section class="hero" id="home">
+  <div class="hero-ambient">
+    <div class="amb a1"></div><div class="amb a2"></div><div class="amb a3"></div>
+  </div>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <span class="dot-live"></span> Live from Pokatunga Farm
+      </div>
+      <h1 class="hero-h1">
+        <span class="line l1">Premium</span>
+        <span class="line l2 italic-green">Mushrooms</span>
+        <span class="line l3">Grown Naturally</span>
       </h1>
-      <p class="hero-subtitle">
-        From the fertile lands of Odisha, Triglow brings you the freshest button mushrooms and seasonal varieties — straight from farm to your plate.
-      </p>
-      <div class="hero-cta">
-        <a href="#products" class="btn-primary"><i class="fas fa-shopping-bag"></i> Shop Now</a>
-        <a href="#about" class="btn-outline">Our Story <i class="fas fa-arrow-right"></i></a>
+      <p class="hero-desc">Three brothers. One farm. A thousand smiles. Fresh button & seasonal mushrooms delivered straight from Angul, Odisha.</p>
+      <div class="hero-actions">
+        <a href="#products" class="cta-main"><span>Shop Now</span><i class="fas fa-arrow-right"></i></a>
+        <a href="#youtube" class="cta-ghost"><i class="fab fa-youtube"></i> Watch Us Farm</a>
       </div>
-      <div class="hero-stats">
-        <div class="stat"><span class="stat-num">3+</span><span class="stat-label">Years Farming</span></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Happy Customers</span></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Organic</span></div>
+      <div class="hero-pills">
+        <div class="pill"><i class="fas fa-seedling"></i> Organic</div>
+        <div class="pill"><i class="fas fa-truck"></i> Same Day</div>
+        <div class="pill"><i class="fas fa-award"></i> Certified</div>
+        <div class="pill"><i class="fas fa-coins"></i> Earn Coins</div>
       </div>
     </div>
     <div class="hero-visual">
-      <div class="hero-img-wrap">
-        <div class="hero-mushroom-display">
-          <div class="mush-circle">
-            <span class="big-mush">🍄</span>
-            <div class="orbit o1"><span>🍄</span></div>
-            <div class="orbit o2"><span>🌿</span></div>
-            <div class="orbit o3"><span>✨</span></div>
+      <div class="hero-orb-wrap">
+        <div class="hero-orb">
+          <div class="orb-core">🍄</div>
+          <div class="orb-ring r1"><span>🌿</span></div>
+          <div class="orb-ring r2"><span>✨</span></div>
+          <div class="orb-ring r3"><span>🍃</span></div>
+        </div>
+        <div class="float-tag ft1"><i class="fas fa-star"></i> 4.9★ Rated</div>
+        <div class="float-tag ft2"><i class="fas fa-users"></i> 500+ Customers</div>
+        <div class="float-tag ft3"><i class="fas fa-leaf"></i> No Pesticides</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll to explore</span>
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+  </div>
+</section>
+
+<!-- ██████ TICKER ██████ -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span>🍄 Farm Fresh Button Mushrooms</span><span>🌿 Organic Cultivation</span>
+    <span>🪙 Earn Coins on Every Share</span><span>🚚 Free Delivery in Angul</span>
+    <span>⭐ 4.9 Star Rated</span><span>🎁 Refer & Earn</span>
+    <span>🍄 Farm Fresh Button Mushrooms</span><span>🌿 Organic Cultivation</span>
+    <span>🪙 Earn Coins on Every Share</span><span>🚚 Free Delivery in Angul</span>
+    <span>⭐ 4.9 Star Rated</span><span>🎁 Refer & Earn</span>
+  </div>
+</div>
+
+<!-- ██████ STATS ██████ -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card sc1">
+      <div class="stat-icon">🍄</div>
+      <div class="stat-number" data-target="500">0</div>
+      <div class="stat-label">Kg Produced Monthly</div>
+    </div>
+    <div class="stat-card sc2">
+      <div class="stat-icon">😊</div>
+      <div class="stat-number" data-target="500">0</div>
+      <div class="stat-label">Happy Customers</div>
+    </div>
+    <div class="stat-card sc3">
+      <div class="stat-icon">🌱</div>
+      <div class="stat-number" data-target="3">0</div>
+      <div class="stat-label">Years Farming</div>
+    </div>
+    <div class="stat-card sc4">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-number" data-target="100">0</div>
+      <div class="stat-label">% Organic</div>
+    </div>
+  </div>
+</section>
+
+<!-- ██████ PRODUCTS ██████ -->
+<section class="section" id="products">
+  <div class="sec-head">
+    <div class="sec-tag"><i class="fas fa-leaf"></i> Fresh Picks</div>
+    <h2 class="sec-title">Our <em>Products</em></h2>
+    <p class="sec-sub">Handpicked daily from our Pokatunga farm — pure, nutritious, and delicious.</p>
+  </div>
+
+  <div class="prod-filter">
+    <button class="pf-btn active" data-f="all">All Products</button>
+    <button class="pf-btn" data-f="button">Button</button>
+    <button class="pf-btn" data-f="seasonal">Seasonal</button>
+    <button class="pf-btn" data-f="combo">Combo Packs</button>
+  </div>
+
+  <div class="products-grid" id="productsGrid">
+    <div class="pcard" data-cat="button">
+      <div class="pcard-badge">🔥 Best Seller</div>
+      <div class="pcard-img"><span>🍄</span></div>
+      <div class="pcard-body">
+        <div class="pcard-cat">Button Mushrooms</div>
+        <h3>Fresh White Button</h3>
+        <p>Harvested at peak freshness. Perfect for curries, pasta & soups.</p>
+        <div class="pcard-meta">
+          <div class="stars-row">★★★★½ <span>(128)</span></div>
+          <span class="weight-tag">250g</span>
+        </div>
+        <div class="pcard-footer">
+          <div class="price-row">
+            <span class="price">₹45</span>
+            <span class="oprice">₹60</span>
+            <span class="save">25% off</span>
           </div>
-        </div>
-        <div class="hero-card-float c1">
-          <i class="fas fa-star"></i> Premium Quality
-        </div>
-        <div class="hero-card-float c2">
-          <i class="fas fa-truck"></i> Free Delivery
+          <button class="add-btn" onclick="addToCart('Fresh White Button',45,'🍄')">
+            <i class="fas fa-plus"></i>
+          </button>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- ========== FEATURES STRIP ========== -->
-  <section class="features-strip">
-    <div class="feature-item">
-      <i class="fas fa-seedling"></i>
-      <div><strong>Farm Fresh</strong><p>Harvested daily</p></div>
-    </div>
-    <div class="feature-item">
-      <i class="fas fa-truck"></i>
-      <div><strong>Fast Delivery</strong><p>Same day dispatch</p></div>
-    </div>
-    <div class="feature-item">
-      <i class="fas fa-leaf"></i>
-      <div><strong>100% Organic</strong><p>No pesticides</p></div>
-    </div>
-    <div class="feature-item">
-      <i class="fas fa-shield-alt"></i>
-      <div><strong>Quality Assured</strong><p>Hygienically packed</p></div>
-    </div>
-    <div class="feature-item">
-      <i class="fas fa-headset"></i>
-      <div><strong>24/7 Support</strong><p>Always here for you</p></div>
-    </div>
-  </section>
-
-  <!-- ========== PRODUCTS ========== -->
-  <section class="section" id="products">
-    <div class="section-header">
-      <div class="section-tag">Fresh Picks</div>
-      <h2 class="section-title">Our <span class="accent">Products</span></h2>
-      <p class="section-sub">Handpicked from our farm in Pokatunga, Angul — pure, fresh, and nutritious.</p>
+    <div class="pcard" data-cat="button">
+      <div class="pcard-badge organic">🌿 Organic</div>
+      <div class="pcard-img"><span>🍄</span></div>
+      <div class="pcard-body">
+        <div class="pcard-cat">Button Mushrooms</div>
+        <h3>Premium Button 500g</h3>
+        <p>Larger gourmet buttons ideal for grilling, stuffing & sautéing.</p>
+        <div class="pcard-meta">
+          <div class="stars-row">★★★★★ <span>(89)</span></div>
+          <span class="weight-tag">500g</span>
+        </div>
+        <div class="pcard-footer">
+          <div class="price-row"><span class="price">₹85</span><span class="oprice">₹110</span><span class="save">22% off</span></div>
+          <button class="add-btn" onclick="addToCart('Premium Button 500g',85,'🍄')"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
     </div>
 
-    <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="button">Button Mushrooms</button>
-      <button class="filter-btn" data-filter="seasonal">Seasonal</button>
-      <button class="filter-btn" data-filter="combo">Combo Packs</button>
+    <div class="pcard" data-cat="seasonal">
+      <div class="pcard-badge seasonal">🌊 Seasonal</div>
+      <div class="pcard-img"><span>🫧</span></div>
+      <div class="pcard-body">
+        <div class="pcard-cat">Seasonal Mushrooms</div>
+        <h3>Oyster Mushroom</h3>
+        <p>Delicate, earthy oyster mushrooms — rich in protein & antioxidants.</p>
+        <div class="pcard-meta">
+          <div class="stars-row">★★★★☆ <span>(64)</span></div>
+          <span class="weight-tag">200g</span>
+        </div>
+        <div class="pcard-footer">
+          <div class="price-row"><span class="price">₹55</span><span class="oprice">₹75</span><span class="save">26% off</span></div>
+          <button class="add-btn" onclick="addToCart('Oyster Mushroom',55,'🫧')"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
     </div>
 
-    <div class="products-grid" id="productsGrid">
+    <div class="pcard" data-cat="seasonal">
+      <div class="pcard-badge new-b">✨ New</div>
+      <div class="pcard-img"><span>🍃</span></div>
+      <div class="pcard-body">
+        <div class="pcard-cat">Seasonal Mushrooms</div>
+        <h3>Milky Mushroom</h3>
+        <p>Thick, meaty seasonal delight from our Odisha farm. High-fibre.</p>
+        <div class="pcard-meta">
+          <div class="stars-row">★★★★★ <span>(43)</span></div>
+          <span class="weight-tag">250g</span>
+        </div>
+        <div class="pcard-footer">
+          <div class="price-row"><span class="price">₹65</span><span class="oprice">₹90</span><span class="save">27% off</span></div>
+          <button class="add-btn" onclick="addToCart('Milky Mushroom',65,'🍃')"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
 
-      <div class="product-card" data-category="button">
-        <div class="product-badge">Best Seller</div>
-        <div class="product-img">🍄</div>
-        <div class="product-info">
-          <div class="product-cat">Button Mushrooms</div>
-          <h3>Fresh White Button</h3>
-          <p>Freshly harvested white button mushrooms, perfect for curries and soups.</p>
-          <div class="product-meta">
-            <div class="rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-              <span>(128)</span>
+    <div class="pcard" data-cat="combo">
+      <div class="pcard-badge combo">🎁 Combo</div>
+      <div class="pcard-img"><span>🧺</span></div>
+      <div class="pcard-body">
+        <div class="pcard-cat">Combo Packs</div>
+        <h3>Weekly Family Pack</h3>
+        <p>Button + Oyster + Milky — best value combo for the whole family.</p>
+        <div class="pcard-meta">
+          <div class="stars-row">★★★★★ <span>(201)</span></div>
+          <span class="weight-tag">1kg</span>
+        </div>
+        <div class="pcard-footer">
+          <div class="price-row"><span class="price">₹160</span><span class="oprice">₹220</span><span class="save">27% off</span></div>
+          <button class="add-btn" onclick="addToCart('Weekly Family Pack',160,'🧺')"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pcard" data-cat="button">
+      <div class="pcard-img"><span>🍄</span></div>
+      <div class="pcard-body">
+        <div class="pcard-cat">Button Mushrooms</div>
+        <h3>Sliced Ready Pack</h3>
+        <p>Pre-washed & sliced buttons. Open and cook instantly.</p>
+        <div class="pcard-meta">
+          <div class="stars-row">★★★★☆ <span>(57)</span></div>
+          <span class="weight-tag">200g</span>
+        </div>
+        <div class="pcard-footer">
+          <div class="price-row"><span class="price">₹50</span><span class="oprice">₹70</span><span class="save">28% off</span></div>
+          <button class="add-btn" onclick="addToCart('Sliced Ready Pack',50,'🍄')"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="no-results" id="noResults"><i class="fas fa-search"></i><p>No products found.</p></div>
+</section>
+
+<!-- ██████ SHARE & EARN ██████ -->
+<section class="coins-section" id="earn">
+  <div class="coins-bg-art">
+    <div class="ca ca1"></div><div class="ca ca2"></div>
+  </div>
+  <div class="coins-content">
+    <div class="coins-left">
+      <div class="sec-tag light"><i class="fas fa-coins"></i> Earn & Redeem</div>
+      <h2>Share Triglow.<br><em>Earn Coins. Get Discounts.</em></h2>
+      <p>Every share earns you <strong>10 coins</strong>. Collect <strong>100 coins</strong> = <strong>₹5 discount</strong> on your next order. The more you share, the more you save!</p>
+      <div class="coins-math">
+        <div class="math-step"><span class="ms-num">1</span><span>Share on Social</span><span class="ms-earn">+10 🪙</span></div>
+        <div class="ms-arrow">→</div>
+        <div class="math-step"><span class="ms-num">100</span><span>Coins collected</span><span class="ms-earn">= ₹5 off</span></div>
+        <div class="ms-arrow">→</div>
+        <div class="math-step"><span class="ms-num">500</span><span>Coins collected</span><span class="ms-earn">= ₹25 off</span></div>
+      </div>
+      <div class="share-buttons">
+        <button class="share-btn whatsapp" onclick="shareOn('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp <span>+10🪙</span></button>
+        <button class="share-btn facebook" onclick="shareOn('facebook')"><i class="fab fa-facebook-f"></i> Facebook <span>+10🪙</span></button>
+        <button class="share-btn instagram" onclick="shareOn('instagram')"><i class="fab fa-instagram"></i> Instagram <span>+10🪙</span></button>
+        <button class="share-btn twitter" onclick="shareOn('twitter')"><i class="fab fa-twitter"></i> Twitter <span>+10🪙</span></button>
+        <button class="share-btn telegram" onclick="shareOn('telegram')"><i class="fab fa-telegram"></i> Telegram <span>+10🪙</span></button>
+      </div>
+    </div>
+    <div class="coins-right">
+      <div class="coins-wallet" id="coinsWallet">
+        <div class="wallet-glow"></div>
+        <div class="wallet-icon">🪙</div>
+        <div class="wallet-bal" id="walletBal">0</div>
+        <div class="wallet-label">Your Coins</div>
+        <div class="wallet-eq">= ₹<span id="walletRs">0.00</span> discount</div>
+        <div class="wallet-bar-wrap">
+          <div class="wallet-bar-track">
+            <div class="wallet-bar-fill" id="walletBarFill"></div>
+          </div>
+          <div class="wallet-bar-text"><span id="walletBarText">0 / 100 to next ₹5</span></div>
+        </div>
+        <button class="redeem-btn" id="redeemBtn" onclick="redeemCoins()" disabled>Redeem Coins</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ██████ YOUTUBE SECTION ██████ -->
+<section class="section yt-section" id="youtube">
+  <div class="sec-head">
+    <div class="sec-tag red-tag"><i class="fab fa-youtube"></i> Watch Us</div>
+    <h2 class="sec-title">Our Farm <em>On YouTube</em></h2>
+    <p class="sec-sub">Watch our farming process, harvesting, packaging and more on our YouTube channel.</p>
+  </div>
+  <div class="yt-grid">
+    <div class="yt-main">
+      <div class="yt-embed-wrap">
+        <div class="yt-placeholder" onclick="loadYT(this,'dQw4w9WgXcQ')">
+          <div class="yt-thumb-bg">🌿</div>
+          <div class="yt-play-btn"><i class="fab fa-youtube"></i></div>
+          <div class="yt-title-overlay">How We Grow Button Mushrooms | Triglow Farm Tour</div>
+        </div>
+      </div>
+    </div>
+    <div class="yt-side">
+      <div class="yt-card" onclick="loadYTMain('dQw4w9WgXcQ','Harvesting Day at Triglow Farm – Angul Odisha')">
+        <div class="ytc-thumb">🍄</div>
+        <div class="ytc-info">
+          <div class="ytc-title">Harvesting Day at Triglow Farm</div>
+          <div class="ytc-meta">Triglow Farm · 2.1K views</div>
+        </div>
+        <i class="fas fa-play-circle ytc-play"></i>
+      </div>
+      <div class="yt-card" onclick="loadYTMain('dQw4w9WgXcQ','Oyster Mushroom Cultivation Step by Step')">
+        <div class="ytc-thumb">🫧</div>
+        <div class="ytc-info">
+          <div class="ytc-title">Oyster Mushroom Cultivation Guide</div>
+          <div class="ytc-meta">Triglow Farm · 1.8K views</div>
+        </div>
+        <i class="fas fa-play-circle ytc-play"></i>
+      </div>
+      <div class="yt-card" onclick="loadYTMain('dQw4w9WgXcQ','Meet the Brothers – Triglow Story')">
+        <div class="ytc-thumb">👨‍👨‍👦</div>
+        <div class="ytc-info">
+          <div class="ytc-title">Meet the Brothers – Triglow Story</div>
+          <div class="ytc-meta">Triglow Farm · 3.4K views</div>
+        </div>
+        <i class="fas fa-play-circle ytc-play"></i>
+      </div>
+      <div class="yt-card" onclick="loadYTMain('dQw4w9WgXcQ','Packaging and Quality Check')">
+        <div class="ytc-thumb">📦</div>
+        <div class="ytc-info">
+          <div class="ytc-title">Packaging & Quality Check Process</div>
+          <div class="ytc-meta">Triglow Farm · 1.2K views</div>
+        </div>
+        <i class="fas fa-play-circle ytc-play"></i>
+      </div>
+      <a href="https://youtube.com" target="_blank" class="yt-channel-btn">
+        <i class="fab fa-youtube"></i> Subscribe to Our Channel
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ██████ BENEFITS ██████ -->
+<section class="section benefits-section" id="benefits">
+  <div class="sec-head">
+    <div class="sec-tag"><i class="fas fa-heart"></i> Health & Nutrition</div>
+    <h2 class="sec-title">Why <em>Mushrooms?</em></h2>
+    <p class="sec-sub">Superfoods from nature — packed with nutrition, loved by your body.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="bcard"><div class="bcard-icon">💪</div><h3>High in Protein</h3><p>All essential amino acids — great plant-based protein for vegetarians.</p></div>
+    <div class="bcard"><div class="bcard-icon">❤️</div><h3>Heart Healthy</h3><p>Rich in potassium & fibre. Helps lower blood pressure naturally.</p></div>
+    <div class="bcard"><div class="bcard-icon">🧠</div><h3>Immunity Boost</h3><p>Beta-glucans & antioxidants strengthen the immune system.</p></div>
+    <div class="bcard"><div class="bcard-icon">⚖️</div><h3>Weight Friendly</h3><p>Low calories, high fibre — keeps you full and fit.</p></div>
+    <div class="bcard"><div class="bcard-icon">☀️</div><h3>Vitamin D</h3><p>Natural Vitamin D source. Great for bones and mood.</p></div>
+    <div class="bcard"><div class="bcard-icon">🌱</div><h3>Zero Chemicals</h3><p>100% chemical-free substrate cultivation. Pure and safe.</p></div>
+  </div>
+</section>
+
+<!-- ██████ GALLERY ██████ -->
+<section class="section gallery-section" id="gallery">
+  <div class="sec-head">
+    <div class="sec-tag"><i class="fas fa-camera"></i> Farm Life</div>
+    <h2 class="sec-title">Farm <em>Gallery</em></h2>
+    <p class="sec-sub">A peek inside our mushroom farm in Pokatunga, Angul.</p>
+  </div>
+  <div class="gallery-masonry">
+    <div class="gm-item gm-tall" onclick="openLightbox('🏚️','Farm Infrastructure — Our Cultivation Sheds')">
+      <div class="gm-inner gm-c1"><span class="gm-emoji">🏚️</span><div class="gm-label">Farm Infrastructure</div></div>
+    </div>
+    <div class="gm-item" onclick="openLightbox('🌱','Substrate Preparation — The Foundation of Growth')">
+      <div class="gm-inner gm-c2"><span class="gm-emoji">🌱</span><div class="gm-label">Substrate Prep</div></div>
+    </div>
+    <div class="gm-item" onclick="openLightbox('🍄','Growing Bags — Where the Magic Happens')">
+      <div class="gm-inner gm-c3"><span class="gm-emoji">🍄</span><div class="gm-label">Growing Bags</div></div>
+    </div>
+    <div class="gm-item gm-wide" onclick="openLightbox('🧺','Harvest Day — Fresh Mushrooms Ready to Ship')">
+      <div class="gm-inner gm-c4"><span class="gm-emoji">🧺</span><div class="gm-label">Harvest Day</div></div>
+    </div>
+    <div class="gm-item" onclick="openLightbox('💧','Irrigation — Keeping Our Mushrooms Hydrated')">
+      <div class="gm-inner gm-c5"><span class="gm-emoji">💧</span><div class="gm-label">Irrigation</div></div>
+    </div>
+    <div class="gm-item" onclick="openLightbox('📦','Packaging — Hygienic & Eco-Friendly Packing')">
+      <div class="gm-inner gm-c6"><span class="gm-emoji">📦</span><div class="gm-label">Packaging</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+    <div class="lb-emoji" id="lbEmoji"></div>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+</div>
+
+<!-- ██████ ABOUT / TEAM ██████ -->
+<section class="section about-section" id="about">
+  <div class="sec-head">
+    <div class="sec-tag"><i class="fas fa-users"></i> Our Story</div>
+    <h2 class="sec-title">The <em>Brothers</em> Behind Triglow</h2>
+    <p class="sec-sub">Three brothers from Odisha turned a dream into a thriving mushroom farm.</p>
+  </div>
+
+  <div class="story-block">
+    <div class="story-text">
+      <p>Triglow was born in <strong>Pokatunga, Bantala, Angul, Odisha</strong> — where three brothers decided to grow mushrooms and bring freshness to every table. Starting with one shed and pure determination, they built a farm that now serves hundreds of happy customers.</p>
+      <p>The name <strong>"Triglow"</strong> represents the <em>three glowing brothers</em> — each bringing their unique skills to make the farm a success. From soil to your plate, every mushroom is grown with care.</p>
+    </div>
+  </div>
+
+  <!-- CARTOON THANK YOU ANIMATION -->
+  <div class="cartoon-section">
+    <div class="cartoon-title">🎉 A Message From Your Farmers</div>
+    <div class="cartoon-stage">
+      <div class="cartoon-bg-elements">
+        <div class="cb-cloud c1">☁️</div>
+        <div class="cb-cloud c2">☁️</div>
+        <div class="cb-sun">☀️</div>
+        <div class="cb-tree t1">🌳</div>
+        <div class="cb-tree t2">🌳</div>
+        <div class="cb-ground"></div>
+      </div>
+      <div class="cartoon-brothers">
+        <div class="cartoon-brother cb-left" id="cbLeft">
+          <div class="cb-bubble left-bubble" id="cbBubble1">Namaste! I'm Amulya 🙏</div>
+          <div class="cb-body">
+            <div class="cb-head">
+              <div class="cb-face">
+                <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
+                <div class="cb-smile"></div>
+              </div>
+              <div class="cb-hair hair1"></div>
             </div>
-            <span class="weight">250g</span>
-          </div>
-          <div class="product-footer">
-            <div class="price-block">
-              <span class="price">₹45</span>
-              <span class="old-price">₹60</span>
-              <span class="discount">25% off</span>
+            <div class="cb-torso torso1">A</div>
+            <div class="cb-arms">
+              <div class="cb-arm left-arm arm1"></div>
+              <div class="cb-arm right-arm arm1r"></div>
             </div>
-            <button class="add-cart-btn" onclick="addToCart('Fresh White Button', 45)">
-              <i class="fas fa-cart-plus"></i> Add
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-category="button">
-        <div class="product-badge organic">Organic</div>
-        <div class="product-img">🍄</div>
-        <div class="product-info">
-          <div class="product-cat">Button Mushrooms</div>
-          <h3>Premium Button Pack</h3>
-          <p>Larger sized button mushrooms ideal for grilling, stuffing and cooking.</p>
-          <div class="product-meta">
-            <div class="rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              <span>(89)</span>
+            <div class="cb-legs">
+              <div class="cb-leg"></div><div class="cb-leg"></div>
             </div>
-            <span class="weight">500g</span>
           </div>
-          <div class="product-footer">
-            <div class="price-block">
-              <span class="price">₹85</span>
-              <span class="old-price">₹110</span>
-              <span class="discount">22% off</span>
+          <div class="cb-name">Amulya<br><span>Business Manager</span></div>
+        </div>
+
+        <div class="cartoon-brother cb-center" id="cbCenter">
+          <div class="cb-bubble center-bubble" id="cbBubble2">Thank you for your love! — Ankit 🍄</div>
+          <div class="cb-body">
+            <div class="cb-head">
+              <div class="cb-face">
+                <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
+                <div class="cb-smile"></div>
+              </div>
+              <div class="cb-hair hair2"></div>
             </div>
-            <button class="add-cart-btn" onclick="addToCart('Premium Button Pack', 85)">
-              <i class="fas fa-cart-plus"></i> Add
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-category="seasonal">
-        <div class="product-badge seasonal-badge">Seasonal</div>
-        <div class="product-img">🌿</div>
-        <div class="product-info">
-          <div class="product-cat">Seasonal Mushrooms</div>
-          <h3>Oyster Mushroom</h3>
-          <p>Delicate oyster mushrooms with a mild, earthy flavour — rich in protein.</p>
-          <div class="product-meta">
-            <div class="rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-              <span>(64)</span>
+            <div class="cb-torso torso2">A</div>
+            <div class="cb-arms">
+              <div class="cb-arm left-arm arm2 wave-arm"></div>
+              <div class="cb-arm right-arm arm2r"></div>
             </div>
-            <span class="weight">200g</span>
-          </div>
-          <div class="product-footer">
-            <div class="price-block">
-              <span class="price">₹55</span>
-              <span class="old-price">₹75</span>
-              <span class="discount">26% off</span>
+            <div class="cb-legs">
+              <div class="cb-leg"></div><div class="cb-leg"></div>
             </div>
-            <button class="add-cart-btn" onclick="addToCart('Oyster Mushroom', 55)">
-              <i class="fas fa-cart-plus"></i> Add
-            </button>
           </div>
+          <div class="cb-name">Ankit<br><span>Owner & Marketing</span></div>
         </div>
-      </div>
 
-      <div class="product-card" data-category="seasonal">
-        <div class="product-badge new-badge">New</div>
-        <div class="product-img">🍃</div>
-        <div class="product-info">
-          <div class="product-cat">Seasonal Mushrooms</div>
-          <h3>Milky Mushroom</h3>
-          <p>Thick, meaty milky mushrooms — a seasonal delight from Odisha farms.</p>
-          <div class="product-meta">
-            <div class="rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              <span>(43)</span>
+        <div class="cartoon-brother cb-right" id="cbRight">
+          <div class="cb-bubble right-bubble" id="cbBubble3">Fresh from my farm! — Amit 🌿</div>
+          <div class="cb-body">
+            <div class="cb-head">
+              <div class="cb-face">
+                <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
+                <div class="cb-smile"></div>
+              </div>
+              <div class="cb-hair hair3"></div>
             </div>
-            <span class="weight">250g</span>
-          </div>
-          <div class="product-footer">
-            <div class="price-block">
-              <span class="price">₹65</span>
-              <span class="old-price">₹90</span>
-              <span class="discount">27% off</span>
+            <div class="cb-torso torso3">A</div>
+            <div class="cb-arms">
+              <div class="cb-arm left-arm arm3"></div>
+              <div class="cb-arm right-arm arm3r"></div>
             </div>
-            <button class="add-cart-btn" onclick="addToCart('Milky Mushroom', 65)">
-              <i class="fas fa-cart-plus"></i> Add
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-category="combo">
-        <div class="product-badge combo-badge">Combo</div>
-        <div class="product-img">🛒</div>
-        <div class="product-info">
-          <div class="product-cat">Combo Packs</div>
-          <h3>Weekly Family Pack</h3>
-          <p>Button + Oyster + Milky mushrooms combo – best value for families.</p>
-          <div class="product-meta">
-            <div class="rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              <span>(201)</span>
+            <div class="cb-legs">
+              <div class="cb-leg"></div><div class="cb-leg"></div>
             </div>
-            <span class="weight">1kg</span>
           </div>
-          <div class="product-footer">
-            <div class="price-block">
-              <span class="price">₹160</span>
-              <span class="old-price">₹220</span>
-              <span class="discount">27% off</span>
-            </div>
-            <button class="add-cart-btn" onclick="addToCart('Weekly Family Pack', 160)">
-              <i class="fas fa-cart-plus"></i> Add
-            </button>
-          </div>
+          <div class="cb-name">Amit<br><span>Production Manager</span></div>
         </div>
       </div>
+      <div class="cartoon-mushrooms">
+        <span class="cm cm1">🍄</span><span class="cm cm2">🍄</span>
+        <span class="cm cm3">🍄</span><span class="cm cm4">🍄</span>
+      </div>
+    </div>
+    <div class="cartoon-message-board">
+      <div class="cmb-inner" id="cmbMessage">
+        "We grow every mushroom with love and dedication. Your health is our mission. Thank you for choosing Triglow — it means the world to us and our family!" 🙏
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div class="product-card" data-category="button">
-        <div class="product-img">🍄</div>
-        <div class="product-info">
-          <div class="product-cat">Button Mushrooms</div>
-          <h3>Sliced Button Mushrooms</h3>
-          <p>Pre-sliced and cleaned button mushrooms – ready to cook, save your time.</p>
-          <div class="product-meta">
-            <div class="rating">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-              <span>(57)</span>
-            </div>
-            <span class="weight">200g</span>
-          </div>
-          <div class="product-footer">
-            <div class="price-block">
-              <span class="price">₹50</span>
-              <span class="old-price">₹70</span>
-              <span class="discount">28% off</span>
-            </div>
-            <button class="add-cart-btn" onclick="addToCart('Sliced Button Mushrooms', 50)">
-              <i class="fas fa-cart-plus"></i> Add
-            </button>
-          </div>
-        </div>
+<!-- ██████ REVIEWS ██████ -->
+<section class="section reviews-section" id="reviews">
+  <div class="sec-head">
+    <div class="sec-tag"><i class="fas fa-star"></i> Customer Love</div>
+    <h2 class="sec-title">What People <em>Say</em></h2>
+    <p class="sec-sub">Real voices from our happy customers across Odisha.</p>
+  </div>
+  <div class="reviews-track-wrap">
+    <div class="reviews-track" id="reviewsTrack">
+      <div class="rcard">
+        <div class="rcard-stars">★★★★★</div>
+        <p>"Freshest mushrooms I've ever tasted! I order every week and the quality never disappoints. So proud of this local Odisha business!"</p>
+        <div class="rcard-user"><div class="rcu-av">P</div><div><strong>Priya Nayak</strong><span>Angul, Odisha</span></div></div>
       </div>
+      <div class="rcard featured-r">
+        <div class="rcard-stars">★★★★★</div>
+        <p>"The oyster mushrooms are simply amazing! My family loves them. Hygienic packaging and always on-time delivery. Highly recommend!"</p>
+        <div class="rcard-user"><div class="rcu-av">R</div><div><strong>Rajan Mohanty</strong><span>Sambalpur, Odisha</span></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-stars">★★★★½</div>
+        <p>"As a hotel chef, I need consistency. Triglow delivers every single time. The button mushrooms are perfect for my dishes."</p>
+        <div class="rcard-user"><div class="rcu-av">S</div><div><strong>Subhashree Das</strong><span>Bhubaneswar, Odisha</span></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-stars">★★★★★</div>
+        <p>"The family combo pack is incredible value! Three types of fresh mushrooms at such a great price. We love supporting local farmers!"</p>
+        <div class="rcard-user"><div class="rcu-av">D</div><div><strong>Deepak Sahoo</strong><span>Cuttack, Odisha</span></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-stars">★★★★★</div>
+        <p>"Ordered for the first time and absolutely loved it. The milky mushrooms were so fresh and thick. Will be a regular customer now!"</p>
+        <div class="rcard-user"><div class="rcu-av">M</div><div><strong>Mithun Patro</strong><span>Rourkela, Odisha</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="reviews-nav">
+    <button onclick="scrollReviews(-1)"><i class="fas fa-chevron-left"></i></button>
+    <button onclick="scrollReviews(1)"><i class="fas fa-chevron-right"></i></button>
+  </div>
 
+  <div class="review-form-card">
+    <h3>Share Your Experience ⭐</h3>
+    <div class="rf-inner">
+      <input type="text" id="rvName" placeholder="Your Name"/>
+      <div class="star-picker" id="starPicker">
+        <span onclick="pickStar(1)">★</span><span onclick="pickStar(2)">★</span>
+        <span onclick="pickStar(3)">★</span><span onclick="pickStar(4)">★</span>
+        <span onclick="pickStar(5)">★</span>
+      </div>
+      <textarea id="rvText" placeholder="Write your review..." rows="3"></textarea>
+      <button class="cta-main" onclick="submitReview()"><i class="fas fa-paper-plane"></i> Post Review</button>
     </div>
+  </div>
+</section>
 
-    <!-- Search no result -->
-    <div class="no-results" id="noResults" style="display:none;">
-      <i class="fas fa-search"></i>
-      <p>No products found. Try a different keyword.</p>
-    </div>
-  </section>
-
-  <!-- ========== BENEFITS ========== -->
-  <section class="section benefits-section" id="benefits">
-    <div class="section-header">
-      <div class="section-tag">Health & Nutrition</div>
-      <h2 class="section-title">Why <span class="accent">Mushrooms?</span></h2>
-      <p class="section-sub">Packed with nutrients, mushrooms are a superfood that benefits your body in multiple ways.</p>
-    </div>
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <div class="benefit-icon"><i class="fas fa-dumbbell"></i></div>
-        <h3>High in Protein</h3>
-        <p>Mushrooms contain all essential amino acids making them an excellent plant-based protein source for vegetarians.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon"><i class="fas fa-heart"></i></div>
-        <h3>Heart Healthy</h3>
-        <p>Rich in potassium and fibre, mushrooms help lower blood pressure and maintain healthy cholesterol levels.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon"><i class="fas fa-brain"></i></div>
-        <h3>Boosts Immunity</h3>
-        <p>Beta-glucans and antioxidants in mushrooms strengthen the immune system and fight inflammation naturally.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon"><i class="fas fa-weight"></i></div>
-        <h3>Weight Management</h3>
-        <p>Low in calories and high in fibre, mushrooms keep you full longer and support healthy weight management.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon"><i class="fas fa-sun"></i></div>
-        <h3>Vitamin D Source</h3>
-        <p>Mushrooms naturally produce Vitamin D when exposed to sunlight — great for bone health and mood.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon"><i class="fas fa-leaf"></i></div>
-        <h3>Organic Farming</h3>
-        <p>We grow without pesticides or chemicals. Our substrate-based cultivation ensures the purest mushrooms you can eat.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== GALLERY ========== -->
-  <section class="section gallery-section" id="gallery">
-    <div class="section-header">
-      <div class="section-tag">Behind The Scenes</div>
-      <h2 class="section-title">Farm <span class="accent">Gallery</span></h2>
-      <p class="section-sub">A glimpse into how we grow, nurture and harvest at Triglow Farms, Pokatunga.</p>
-    </div>
-    <div class="gallery-grid">
-      <div class="gallery-item gi-large">
-        <div class="gallery-placeholder gp1">
-          <span class="gal-icon">🏚️</span>
-          <span class="gal-label">Farm Infrastructure</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder gp2">
-          <span class="gal-icon">🌱</span>
-          <span class="gal-label">Substrate Preparation</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder gp3">
-          <span class="gal-icon">🍄</span>
-          <span class="gal-label">Growing Bags</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder gp4">
-          <span class="gal-icon">💧</span>
-          <span class="gal-label">Irrigation System</span>
-        </div>
-      </div>
-      <div class="gallery-item gi-wide">
-        <div class="gallery-placeholder gp5">
-          <span class="gal-icon">🧺</span>
-          <span class="gal-label">Harvest Day</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder gp6">
-          <span class="gal-icon">📦</span>
-          <span class="gal-label">Packaging & Dispatch</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== ABOUT ========== -->
-  <section class="section about-section" id="about">
-    <div class="section-header">
-      <div class="section-tag">Our Story</div>
-      <h2 class="section-title">Meet the <span class="accent">Brothers</span></h2>
-      <p class="section-sub">Three brothers from Odisha with one dream — to bring the freshest mushrooms to every home.</p>
-    </div>
-    <div class="about-story">
-      <div class="story-text">
-        <p>Triglow was born in the small village of <strong>Pokatunga, Bantala, Angul, Odisha</strong> — where three brothers decided to turn their passion for agriculture into a thriving mushroom farming business.</p>
-        <p>Starting with a single cultivation shed and a bag of substrate, they built Triglow from the ground up — learning, failing, growing, and eventually succeeding. Today, Triglow is one of the region's trusted names for fresh, organic mushrooms.</p>
-        <p>The name "Triglow" stands for the <strong>three glowing brothers</strong> who light up the mushroom farming world with their dedication, hard work, and love for nature.</p>
-      </div>
-    </div>
-    <div class="team-grid">
-      <div class="team-card">
-        <div class="team-avatar">
-          <span>A</span>
-        </div>
-        <div class="team-role-tag">Elder Brother</div>
-        <h3>Amulya</h3>
-        <div class="team-role"><i class="fas fa-briefcase"></i> Business Manager</div>
-        <p>Amulya oversees all business operations, finances, and strategic planning. His leadership keeps Triglow growing steadily.</p>
-        <div class="team-social">
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-      <div class="team-card featured-card">
-        <div class="team-avatar owner-av">
-          <span>A</span>
-        </div>
-        <div class="team-role-tag owner-tag">Founder & Owner</div>
-        <h3>Ankit</h3>
-        <div class="team-role"><i class="fas fa-bullhorn"></i> Marketing Manager</div>
-        <p>Ankit is the driving force and founder of Triglow. He handles marketing, customer outreach, and brand building for the company.</p>
-        <div class="team-social">
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-      <div class="team-card">
-        <div class="team-avatar">
-          <span>A</span>
-        </div>
-        <div class="team-role-tag">Youngest Brother</div>
-        <h3>Amit</h3>
-        <div class="team-role"><i class="fas fa-tractor"></i> Production Manager</div>
-        <p>Amit manages all cultivation operations — from substrate preparation to harvesting. His hands ensure the best quality mushrooms.</p>
-        <div class="team-social">
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== REVIEWS ========== -->
-  <section class="section reviews-section" id="reviews">
-    <div class="section-header">
-      <div class="section-tag">Customer Love</div>
-      <h2 class="section-title">What People <span class="accent">Say</span></h2>
-      <p class="section-sub">Real reviews from our happy customers across Odisha.</p>
-    </div>
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="review-stars">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-        </div>
-        <p>"Triglow mushrooms are the freshest I've ever had! I order every week and the quality is always top-notch. Love supporting a local Odisha business!"</p>
-        <div class="reviewer">
-          <div class="reviewer-av">P</div>
-          <div><strong>Priya Nayak</strong><span>Angul, Odisha</span></div>
-        </div>
-      </div>
-      <div class="review-card featured-review">
-        <div class="review-stars">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-        </div>
-        <p>"The oyster mushrooms are simply amazing. My family loves the taste. Packaging is hygienic and delivery is always on time. Highly recommended!"</p>
-        <div class="reviewer">
-          <div class="reviewer-av">R</div>
-          <div><strong>Rajan Mohanty</strong><span>Sambalpur, Odisha</span></div>
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-        </div>
-        <p>"As a hotel chef, I need consistent quality. Triglow delivers every single time. The button mushrooms are perfect for my dishes. Great local farm!"</p>
-        <div class="reviewer">
-          <div class="reviewer-av">S</div>
-          <div><strong>Subhashree Das</strong><span>Bhubaneswar, Odisha</span></div>
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-        </div>
-        <p>"We switched to Triglow after struggling to find fresh mushrooms locally. Now we get the combo pack weekly. The family pack is super affordable!"</p>
-        <div class="reviewer">
-          <div class="reviewer-av">D</div>
-          <div><strong>Deepak Sahoo</strong><span>Cuttack, Odisha</span></div>
-        </div>
-      </div>
-    </div>
-    <!-- Review form -->
-    <div class="review-form-wrap">
-      <h3>Share Your Experience</h3>
-      <div class="review-form">
-        <input type="text" placeholder="Your Name" id="reviewName"/>
-        <div class="star-select" id="starSelect">
-          <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span>
-          <span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span>
-          <span onclick="setRating(5)">★</span>
-        </div>
-        <textarea placeholder="Write your review..." id="reviewText" rows="3"></textarea>
-        <button class="btn-primary" onclick="submitReview()"><i class="fas fa-paper-plane"></i> Submit Review</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== CONTACT ========== -->
-  <section class="section contact-section" id="contact">
-    <div class="section-header">
-      <div class="section-tag">Get In Touch</div>
-      <h2 class="section-title">Contact <span class="accent">Us</span></h2>
-      <p class="section-sub">We'd love to hear from you. Reach out for orders, queries or just to say hello!</p>
-    </div>
-    <div class="contact-grid">
-      <div class="contact-info">
-        <div class="contact-item">
-          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-          <div>
-            <strong>Address</strong>
-            <p>Pokatunga, Bantala, Angul<br>Odisha, India – 759129</p>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon"><i class="fas fa-phone"></i></div>
-          <div>
-            <strong>Phone / WhatsApp</strong>
-            <p>+91 XXXXX XXXXX<br>+91 XXXXX XXXXX</p>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-          <div>
-            <strong>Email</strong>
-            <p>triglow.farm@gmail.com<br>support@triglow.in</p>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon"><i class="fas fa-clock"></i></div>
-          <div>
-            <strong>Business Hours</strong>
-            <p>Mon – Sat: 7:00 AM – 7:00 PM<br>Sunday: 8:00 AM – 2:00 PM</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="contact-form-wrap">
-        <div class="contact-form">
-          <input type="text" placeholder="Your Name" id="cName"/>
-          <input type="email" placeholder="Your Email" id="cEmail"/>
-          <input type="tel" placeholder="Your Phone" id="cPhone"/>
-          <textarea rows="4" placeholder="Your Message..." id="cMessage"></textarea>
-          <button class="btn-primary" onclick="submitContact()"><i class="fas fa-paper-plane"></i> Send Message</button>
-        </div>
-      </div>
-
-      <div class="map-wrap">
-        <div class="map-placeholder">
+<!-- ██████ CONTACT ██████ -->
+<section class="section contact-section" id="contact">
+  <div class="sec-head">
+    <div class="sec-tag"><i class="fas fa-phone"></i> Get In Touch</div>
+    <h2 class="sec-title">Contact <em>Triglow</em></h2>
+    <p class="sec-sub">Orders, queries, bulk purchasing — we're always here for you.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info-col">
+      <div class="ci-item"><div class="ci-icon">📍</div><div><strong>Address</strong><p>Pokatunga, Bantala, Angul<br>Odisha, India – 759129</p></div></div>
+      <div class="ci-item"><div class="ci-icon">📞</div><div><strong>Phone / WhatsApp</strong><p>+91 XXXXX XXXXX</p></div></div>
+      <div class="ci-item"><div class="ci-icon">📧</div><div><strong>Email</strong><p>triglow.farm@gmail.com</p></div></div>
+      <div class="ci-item"><div class="ci-icon">🕐</div><div><strong>Business Hours</strong><p>Mon–Sat: 7AM – 7PM<br>Sunday: 8AM – 2PM</p></div></div>
+      <div class="map-box">
+        <div class="map-inner">
           <i class="fas fa-map-marked-alt"></i>
           <p><strong>Triglow Farm</strong></p>
           <p>Pokatunga, Bantala, Angul, Odisha</p>
-          <p>PIN: 759129</p>
-          <a class="btn-outline map-link" href="https://maps.google.com/?q=Bantala,Angul,Odisha" target="_blank">
-            <i class="fas fa-external-link-alt"></i> Open in Google Maps
+          <a href="https://maps.google.com/?q=Bantala,Angul,Odisha" target="_blank" class="cta-ghost map-btn">
+            <i class="fas fa-external-link-alt"></i> Open Maps
           </a>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- ========== FOOTER ========== -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo"><span>🍄</span> Triglow</div>
-        <p>Fresh, organic mushrooms grown with love in the heart of Odisha. From our farm to your plate — pure and natural.</p>
-        <div class="social-links">
-          <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-          <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-        </div>
-      </div>
-      <div class="footer-links-col">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#benefits">Benefits</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-links-col">
-        <h4>Products</h4>
-        <ul>
-          <li><a href="#products">Button Mushrooms</a></li>
-          <li><a href="#products">Oyster Mushrooms</a></li>
-          <li><a href="#products">Milky Mushrooms</a></li>
-          <li><a href="#products">Seasonal Varieties</a></li>
-          <li><a href="#products">Combo Packs</a></li>
-        </ul>
-      </div>
-      <div class="footer-links-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><i class="fas fa-map-marker-alt"></i> Pokatunga, Bantala, Angul, Odisha</li>
-          <li><i class="fas fa-phone"></i> +91 XXXXX XXXXX</li>
-          <li><i class="fas fa-envelope"></i> triglow.farm@gmail.com</li>
-          <li><i class="fas fa-map-pin"></i> PIN: 759129</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2024 <strong>Triglow</strong> | All Rights Reserved | Made with ❤️ in Odisha, India</p>
-      <p class="footer-copy-small">Triglow is a registered mushroom farming business by the three brothers — Amulya, Ankit & Amit.</p>
-    </div>
-  </footer>
-
-  <!-- ========== LOGIN MODAL ========== -->
-  <div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event, 'loginModal')">
-    <div class="modal">
-      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
-      <div class="modal-tabs">
-        <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Login</button>
-        <button class="tab-btn" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
-      </div>
-
-      <div id="loginForm">
-        <div class="modal-logo">🍄 <span>Triglow</span></div>
-        <h2>Welcome Back!</h2>
-        <p class="modal-sub">Login to your Triglow account</p>
-        <div class="form-group">
-          <label><i class="fas fa-user"></i> Username</label>
-          <input type="text" placeholder="Enter your username" id="loginUser"/>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-lock"></i> Password</label>
-          <input type="password" placeholder="Enter your password" id="loginPass"/>
-        </div>
-        <div class="form-row">
-          <label class="checkbox-label"><input type="checkbox"/> Remember me</label>
-          <a href="#" class="forgot-link">Forgot password?</a>
-        </div>
-        <button class="btn-primary full-btn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
-        <p class="modal-switch">Don't have an account? <a onclick="switchTab('signup')">Sign Up</a></p>
-      </div>
-
-      <div id="signupForm" style="display:none;">
-        <div class="modal-logo">🍄 <span>Triglow</span></div>
-        <h2>Create Account</h2>
-        <p class="modal-sub">Join the Triglow family today</p>
-        <div class="form-group">
-          <label><i class="fas fa-user"></i> Full Name</label>
-          <input type="text" placeholder="Enter your full name" id="signupName"/>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-envelope"></i> Email</label>
-          <input type="email" placeholder="Enter your email" id="signupEmail"/>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-phone"></i> Phone</label>
-          <input type="tel" placeholder="Enter your phone number" id="signupPhone"/>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-lock"></i> Password</label>
-          <input type="password" placeholder="Create a password" id="signupPass"/>
-        </div>
-        <button class="btn-primary full-btn" onclick="doSignup()"><i class="fas fa-user-plus"></i> Create Account</button>
-        <p class="modal-switch">Already have an account? <a onclick="switchTab('login')">Login</a></p>
+    <div class="contact-form-col">
+      <div class="cf-card">
+        <h3>Send a Message</h3>
+        <input type="text" id="cfName" placeholder="Your Name"/>
+        <input type="email" id="cfEmail" placeholder="Email Address"/>
+        <input type="tel" id="cfPhone" placeholder="Phone Number"/>
+        <textarea id="cfMsg" rows="4" placeholder="Your message..."></textarea>
+        <button class="cta-main" onclick="sendContact()"><i class="fas fa-paper-plane"></i> Send Message</button>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- ========== CART MODAL ========== -->
-  <div class="modal-overlay" id="cartModal" onclick="closeModalOutside(event, 'cartModal')">
-    <div class="modal cart-modal">
-      <button class="modal-close" onclick="closeModal('cartModal')"><i class="fas fa-times"></i></button>
-      <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
-      <div id="cartItems" class="cart-items-list"></div>
-      <div class="cart-footer" id="cartFooter" style="display:none;">
-        <div class="cart-total">Total: <strong id="cartTotal">₹0</strong></div>
-        <button class="btn-primary full-btn" onclick="checkout()"><i class="fas fa-credit-card"></i> Proceed to Checkout</button>
+<!-- ██████ FOOTER ██████ -->
+<footer class="footer">
+  <div class="footer-wave">
+    <svg viewBox="0 0 1200 80" preserveAspectRatio="none"><path d="M0,40 C300,80 900,0 1200,40 L1200,80 L0,80 Z" fill="var(--surface)"/></svg>
+  </div>
+  <div class="footer-body">
+    <div class="footer-brand-col">
+      <div class="footer-logo">🍄 Triglow</div>
+      <p>Fresh, organic mushrooms grown with love in Pokatunga, Angul, Odisha. From our farm to your plate.</p>
+      <div class="footer-socials">
+        <a href="#" onclick="shareOn('facebook')" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" onclick="shareOn('instagram')" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" onclick="shareOn('whatsapp')" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" onclick="shareOn('twitter')" title="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" onclick="shareOn('telegram')" title="Telegram"><i class="fab fa-telegram"></i></a>
       </div>
-      <div id="cartEmpty" class="cart-empty">
-        <i class="fas fa-shopping-basket"></i>
-        <p>Your cart is empty. Add some fresh mushrooms!</p>
-        <button class="btn-primary" onclick="closeModal('cartModal'); scrollTo('#products')">Browse Products</button>
+    </div>
+    <div class="footer-links-col">
+      <h4>Navigate</h4>
+      <a href="#home">Home</a><a href="#products">Products</a>
+      <a href="#benefits">Benefits</a><a href="#gallery">Gallery</a>
+      <a href="#youtube">Watch</a><a href="#about">About Us</a>
+      <a href="#reviews">Reviews</a><a href="#contact">Contact</a>
+    </div>
+    <div class="footer-links-col">
+      <h4>Products</h4>
+      <a href="#products">Button Mushrooms</a>
+      <a href="#products">Oyster Mushrooms</a>
+      <a href="#products">Milky Mushrooms</a>
+      <a href="#products">Seasonal Varieties</a>
+      <a href="#products">Combo Packs</a>
+    </div>
+    <div class="footer-links-col">
+      <h4>Contact</h4>
+      <p>📍 Pokatunga, Bantala, Angul</p>
+      <p>📞 +91 XXXXX XXXXX</p>
+      <p>📧 triglow.farm@gmail.com</p>
+      <p>📌 PIN: 759129</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 <strong>Triglow</strong> | Crafted with ❤️ by Amulya, Ankit & Amit from Odisha</p>
+  </div>
+</footer>
+
+<!-- ████████████ FLOATING WINDOWS ████████████ -->
+
+<!-- AUTH WINDOW -->
+<div class="fwindow" id="authWindow">
+  <div class="fw-chrome">
+    <div class="fw-title-bar">
+      <div class="fw-dots"><span class="fd red" onclick="closeWindow('authWindow')"></span><span class="fd yellow"></span><span class="fd green"></span></div>
+      <span class="fw-title">🔐 Triglow Account</span>
+      <button class="fw-close-btn" onclick="closeWindow('authWindow')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="fw-body">
+      <div class="auth-tabs">
+        <button class="at-btn active" id="atLogin" onclick="authTab('login')">Login</button>
+        <button class="at-btn" id="atSignup" onclick="authTab('signup')">Sign Up</button>
+      </div>
+      <div id="authLoginForm">
+        <div class="fw-logo">🍄 Triglow</div>
+        <h3>Welcome Back!</h3>
+        <p class="fw-sub">Login to your account</p>
+        <input type="text" class="fw-input" id="liUser" placeholder="Username"/>
+        <input type="password" class="fw-input" id="liPass" placeholder="Password"/>
+        <div class="fw-remember"><label><input type="checkbox"/> Remember me</label><a href="#">Forgot?</a></div>
+        <button class="cta-main fw-full" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <p class="fw-switch">No account? <a onclick="authTab('signup')">Sign Up</a></p>
+      </div>
+      <div id="authSignupForm" style="display:none">
+        <div class="fw-logo">🍄 Triglow</div>
+        <h3>Join Us!</h3>
+        <p class="fw-sub">Create your Triglow account</p>
+        <input type="text" class="fw-input" id="suName" placeholder="Full Name"/>
+        <input type="email" class="fw-input" id="suEmail" placeholder="Email"/>
+        <input type="tel" class="fw-input" id="suPhone" placeholder="Phone Number"/>
+        <input type="password" class="fw-input" id="suPass" placeholder="Password"/>
+        <button class="cta-main fw-full" onclick="doSignup()"><i class="fas fa-user-plus"></i> Create Account</button>
+        <p class="fw-switch">Have account? <a onclick="authTab('login')">Login</a></p>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ========== TOAST ========== -->
-  <div class="toast" id="toast"></div>
+<!-- CART WINDOW -->
+<div class="fwindow" id="cartWindow">
+  <div class="fw-chrome wide-fw">
+    <div class="fw-title-bar">
+      <div class="fw-dots"><span class="fd red" onclick="closeWindow('cartWindow')"></span><span class="fd yellow"></span><span class="fd green"></span></div>
+      <span class="fw-title">🛒 Your Cart</span>
+      <button class="fw-close-btn" onclick="closeWindow('cartWindow')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="fw-body">
+      <div id="cartItemsList" class="cart-list"></div>
+      <div id="cartEmptyMsg" class="cart-empty-state">
+        <div class="ces-icon">🧺</div>
+        <p>Your cart is empty!</p>
+        <button class="cta-main" onclick="closeWindow('cartWindow');scrollTo('#products')">Browse Products</button>
+      </div>
+      <div id="cartSummary" class="cart-summary" style="display:none">
+        <div class="cs-row"><span>Subtotal</span><span id="cSubtotal">₹0</span></div>
+        <div class="cs-row discount-row" id="discountRow" style="display:none"><span>Coin Discount 🪙</span><span id="discountAmt" class="green-text">-₹0</span></div>
+        <div class="cs-row total-row"><span>Total</span><strong id="cTotal">₹0</strong></div>
+        <div class="cs-coins-notice" id="csCoinsNotice"></div>
+        <button class="cta-main fw-full" onclick="checkout()"><i class="fas fa-credit-card"></i> Place Order</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- ========== SCROLL TO TOP ========== -->
-  <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <i class="fas fa-arrow-up"></i>
-  </button>
+<!-- COINS WINDOW -->
+<div class="fwindow" id="coinsWindow">
+  <div class="fw-chrome">
+    <div class="fw-title-bar">
+      <div class="fw-dots"><span class="fd red" onclick="closeWindow('coinsWindow')"></span><span class="fd yellow"></span><span class="fd green"></span></div>
+      <span class="fw-title">🪙 Coin Wallet</span>
+      <button class="fw-close-btn" onclick="closeWindow('coinsWindow')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="fw-body">
+      <div class="cw-balance">
+        <div class="cw-coin-anim">🪙</div>
+        <div class="cw-bal-num" id="cwBalNum">0</div>
+        <div class="cw-bal-label">Total Coins</div>
+        <div class="cw-worth">Worth ₹<span id="cwWorth">0.00</span></div>
+      </div>
+      <div class="cw-progress">
+        <div class="cw-prog-label">Progress to next ₹5 discount</div>
+        <div class="cw-prog-bar"><div class="cw-prog-fill" id="cwProgFill"></div></div>
+        <div class="cw-prog-text"><span id="cwProgText">0 / 100 coins</span></div>
+      </div>
+      <div class="cw-history" id="cwHistory">
+        <div class="cwh-empty">No coins earned yet. Start sharing!</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <script src="script.js"></script>
+<!-- ████████ AI CHATBOT ████████ -->
+<div class="chatbot-fab" id="chatFab" onclick="toggleChat()">
+  <div class="chatfab-icon">🤖</div>
+  <div class="chatfab-pulse"></div>
+  <div class="chatfab-label">AI Help</div>
+</div>
+
+<div class="chatbot-window" id="chatWindow">
+  <div class="cw-header">
+    <div class="cwh-left">
+      <div class="bot-avatar">🍄</div>
+      <div><div class="bot-name">Triglow AI</div><div class="bot-status"><span class="status-dot"></span> Online</div></div>
+    </div>
+    <button class="cwh-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cw-messages" id="chatMessages">
+    <div class="msg bot-msg">
+      <div class="msg-bubble">👋 Hi! I'm Triglow AI — your farming assistant! Ask me anything about our mushrooms, prices, farming, health benefits, or how to order! 🍄</div>
+    </div>
+  </div>
+  <div class="cw-quick-btns">
+    <button onclick="quickChat('What mushrooms do you sell?')">Products?</button>
+    <button onclick="quickChat('How to order?')">Order?</button>
+    <button onclick="quickChat('What are the prices?')">Prices?</button>
+    <button onclick="quickChat('Health benefits of mushrooms?')">Benefits?</button>
+    <button onclick="quickChat('How to earn coins?')">Coins?</button>
+  </div>
+  <div class="cw-input-wrap">
+    <input type="text" id="chatInput" placeholder="Ask anything about Triglow..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<script src="script.js"></script>
 </body>
 </html>
