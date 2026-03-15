@@ -18,13 +18,49 @@
 <div class="cursor-dot" id="cursorDot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- ██████ LOADER ██████ -->
-<div class="loader-overlay" id="loaderOverlay">
-  <div class="loader-inner">
-    <div class="loader-mush">🍄</div>
-    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
-    <p class="loader-text">Growing fresh for you...</p>
+<!-- ██████ INTRO SPLASH (3-second YouTube-style) ██████ -->
+<div class="intro-splash" id="introSplash">
+  <!-- Animated BG layers -->
+  <div class="is-bg">
+    <div class="is-layer l1"></div>
+    <div class="is-layer l2"></div>
+    <div class="is-layer l3"></div>
   </div>
+
+  <!-- Floating particles -->
+  <div class="is-particles">
+    <span class="isp s1">🍄</span>
+    <span class="isp s2">🌿</span>
+    <span class="isp s3">✨</span>
+    <span class="isp s4">🍃</span>
+    <span class="isp s5">🌱</span>
+    <span class="isp s6">⭐</span>
+    <span class="isp s7">🍄</span>
+    <span class="isp s8">💚</span>
+  </div>
+
+  <!-- Main logo reveal -->
+  <div class="is-center">
+    <div class="is-ring-outer">
+      <div class="is-ring-mid">
+        <div class="is-ring-inner">
+          <div class="is-logo-icon">🍄</div>
+        </div>
+      </div>
+    </div>
+    <div class="is-brand-reveal">
+      <div class="is-brand-name">TRIGLOW</div>
+      <div class="is-brand-line"></div>
+      <div class="is-brand-sub">Premium Mushroom Farm • Odisha</div>
+    </div>
+    <div class="is-tagline">Farm Fresh · Organic · Delivered with Love</div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="is-progress-bar">
+    <div class="is-progress-fill" id="isProgressFill"></div>
+  </div>
+  <div class="is-skip" onclick="skipIntro()">Skip ›</div>
 </div>
 
 <!-- ██████ NAVBAR ██████ -->
@@ -420,430 +456,4 @@
     <div class="bcard"><div class="bcard-icon">💪</div><h3>High in Protein</h3><p>All essential amino acids — great plant-based protein for vegetarians.</p></div>
     <div class="bcard"><div class="bcard-icon">❤️</div><h3>Heart Healthy</h3><p>Rich in potassium & fibre. Helps lower blood pressure naturally.</p></div>
     <div class="bcard"><div class="bcard-icon">🧠</div><h3>Immunity Boost</h3><p>Beta-glucans & antioxidants strengthen the immune system.</p></div>
-    <div class="bcard"><div class="bcard-icon">⚖️</div><h3>Weight Friendly</h3><p>Low calories, high fibre — keeps you full and fit.</p></div>
-    <div class="bcard"><div class="bcard-icon">☀️</div><h3>Vitamin D</h3><p>Natural Vitamin D source. Great for bones and mood.</p></div>
-    <div class="bcard"><div class="bcard-icon">🌱</div><h3>Zero Chemicals</h3><p>100% chemical-free substrate cultivation. Pure and safe.</p></div>
-  </div>
-</section>
-
-<!-- ██████ GALLERY ██████ -->
-<section class="section gallery-section" id="gallery">
-  <div class="sec-head">
-    <div class="sec-tag"><i class="fas fa-camera"></i> Farm Life</div>
-    <h2 class="sec-title">Farm <em>Gallery</em></h2>
-    <p class="sec-sub">A peek inside our mushroom farm in Pokatunga, Angul.</p>
-  </div>
-  <div class="gallery-masonry">
-    <div class="gm-item gm-tall" onclick="openLightbox('🏚️','Farm Infrastructure — Our Cultivation Sheds')">
-      <div class="gm-inner gm-c1"><span class="gm-emoji">🏚️</span><div class="gm-label">Farm Infrastructure</div></div>
-    </div>
-    <div class="gm-item" onclick="openLightbox('🌱','Substrate Preparation — The Foundation of Growth')">
-      <div class="gm-inner gm-c2"><span class="gm-emoji">🌱</span><div class="gm-label">Substrate Prep</div></div>
-    </div>
-    <div class="gm-item" onclick="openLightbox('🍄','Growing Bags — Where the Magic Happens')">
-      <div class="gm-inner gm-c3"><span class="gm-emoji">🍄</span><div class="gm-label">Growing Bags</div></div>
-    </div>
-    <div class="gm-item gm-wide" onclick="openLightbox('🧺','Harvest Day — Fresh Mushrooms Ready to Ship')">
-      <div class="gm-inner gm-c4"><span class="gm-emoji">🧺</span><div class="gm-label">Harvest Day</div></div>
-    </div>
-    <div class="gm-item" onclick="openLightbox('💧','Irrigation — Keeping Our Mushrooms Hydrated')">
-      <div class="gm-inner gm-c5"><span class="gm-emoji">💧</span><div class="gm-label">Irrigation</div></div>
-    </div>
-    <div class="gm-item" onclick="openLightbox('📦','Packaging — Hygienic & Eco-Friendly Packing')">
-      <div class="gm-inner gm-c6"><span class="gm-emoji">📦</span><div class="gm-label">Packaging</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <div class="lb-inner">
-    <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
-    <div class="lb-emoji" id="lbEmoji"></div>
-    <div class="lb-caption" id="lbCaption"></div>
-  </div>
-</div>
-
-<!-- ██████ ABOUT / TEAM ██████ -->
-<section class="section about-section" id="about">
-  <div class="sec-head">
-    <div class="sec-tag"><i class="fas fa-users"></i> Our Story</div>
-    <h2 class="sec-title">The <em>Brothers</em> Behind Triglow</h2>
-    <p class="sec-sub">Three brothers from Odisha turned a dream into a thriving mushroom farm.</p>
-  </div>
-
-  <div class="story-block">
-    <div class="story-text">
-      <p>Triglow was born in <strong>Pokatunga, Bantala, Angul, Odisha</strong> — where three brothers decided to grow mushrooms and bring freshness to every table. Starting with one shed and pure determination, they built a farm that now serves hundreds of happy customers.</p>
-      <p>The name <strong>"Triglow"</strong> represents the <em>three glowing brothers</em> — each bringing their unique skills to make the farm a success. From soil to your plate, every mushroom is grown with care.</p>
-    </div>
-  </div>
-
-  <!-- CARTOON THANK YOU ANIMATION -->
-  <div class="cartoon-section">
-    <div class="cartoon-title">🎉 A Message From Your Farmers</div>
-    <div class="cartoon-stage">
-      <div class="cartoon-bg-elements">
-        <div class="cb-cloud c1">☁️</div>
-        <div class="cb-cloud c2">☁️</div>
-        <div class="cb-sun">☀️</div>
-        <div class="cb-tree t1">🌳</div>
-        <div class="cb-tree t2">🌳</div>
-        <div class="cb-ground"></div>
-      </div>
-      <div class="cartoon-brothers">
-        <div class="cartoon-brother cb-left" id="cbLeft">
-          <div class="cb-bubble left-bubble" id="cbBubble1">Namaste! I'm Amulya 🙏</div>
-          <div class="cb-body">
-            <div class="cb-head">
-              <div class="cb-face">
-                <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
-                <div class="cb-smile"></div>
-              </div>
-              <div class="cb-hair hair1"></div>
-            </div>
-            <div class="cb-torso torso1">A</div>
-            <div class="cb-arms">
-              <div class="cb-arm left-arm arm1"></div>
-              <div class="cb-arm right-arm arm1r"></div>
-            </div>
-            <div class="cb-legs">
-              <div class="cb-leg"></div><div class="cb-leg"></div>
-            </div>
-          </div>
-          <div class="cb-name">Amulya<br><span>Business Manager</span></div>
-        </div>
-
-        <div class="cartoon-brother cb-center" id="cbCenter">
-          <div class="cb-bubble center-bubble" id="cbBubble2">Thank you for your love! — Ankit 🍄</div>
-          <div class="cb-body">
-            <div class="cb-head">
-              <div class="cb-face">
-                <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
-                <div class="cb-smile"></div>
-              </div>
-              <div class="cb-hair hair2"></div>
-            </div>
-            <div class="cb-torso torso2">A</div>
-            <div class="cb-arms">
-              <div class="cb-arm left-arm arm2 wave-arm"></div>
-              <div class="cb-arm right-arm arm2r"></div>
-            </div>
-            <div class="cb-legs">
-              <div class="cb-leg"></div><div class="cb-leg"></div>
-            </div>
-          </div>
-          <div class="cb-name">Ankit<br><span>Owner & Marketing</span></div>
-        </div>
-
-        <div class="cartoon-brother cb-right" id="cbRight">
-          <div class="cb-bubble right-bubble" id="cbBubble3">Fresh from my farm! — Amit 🌿</div>
-          <div class="cb-body">
-            <div class="cb-head">
-              <div class="cb-face">
-                <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
-                <div class="cb-smile"></div>
-              </div>
-              <div class="cb-hair hair3"></div>
-            </div>
-            <div class="cb-torso torso3">A</div>
-            <div class="cb-arms">
-              <div class="cb-arm left-arm arm3"></div>
-              <div class="cb-arm right-arm arm3r"></div>
-            </div>
-            <div class="cb-legs">
-              <div class="cb-leg"></div><div class="cb-leg"></div>
-            </div>
-          </div>
-          <div class="cb-name">Amit<br><span>Production Manager</span></div>
-        </div>
-      </div>
-      <div class="cartoon-mushrooms">
-        <span class="cm cm1">🍄</span><span class="cm cm2">🍄</span>
-        <span class="cm cm3">🍄</span><span class="cm cm4">🍄</span>
-      </div>
-    </div>
-    <div class="cartoon-message-board">
-      <div class="cmb-inner" id="cmbMessage">
-        "We grow every mushroom with love and dedication. Your health is our mission. Thank you for choosing Triglow — it means the world to us and our family!" 🙏
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ██████ REVIEWS ██████ -->
-<section class="section reviews-section" id="reviews">
-  <div class="sec-head">
-    <div class="sec-tag"><i class="fas fa-star"></i> Customer Love</div>
-    <h2 class="sec-title">What People <em>Say</em></h2>
-    <p class="sec-sub">Real voices from our happy customers across Odisha.</p>
-  </div>
-  <div class="reviews-track-wrap">
-    <div class="reviews-track" id="reviewsTrack">
-      <div class="rcard">
-        <div class="rcard-stars">★★★★★</div>
-        <p>"Freshest mushrooms I've ever tasted! I order every week and the quality never disappoints. So proud of this local Odisha business!"</p>
-        <div class="rcard-user"><div class="rcu-av">P</div><div><strong>Priya Nayak</strong><span>Angul, Odisha</span></div></div>
-      </div>
-      <div class="rcard featured-r">
-        <div class="rcard-stars">★★★★★</div>
-        <p>"The oyster mushrooms are simply amazing! My family loves them. Hygienic packaging and always on-time delivery. Highly recommend!"</p>
-        <div class="rcard-user"><div class="rcu-av">R</div><div><strong>Rajan Mohanty</strong><span>Sambalpur, Odisha</span></div></div>
-      </div>
-      <div class="rcard">
-        <div class="rcard-stars">★★★★½</div>
-        <p>"As a hotel chef, I need consistency. Triglow delivers every single time. The button mushrooms are perfect for my dishes."</p>
-        <div class="rcard-user"><div class="rcu-av">S</div><div><strong>Subhashree Das</strong><span>Bhubaneswar, Odisha</span></div></div>
-      </div>
-      <div class="rcard">
-        <div class="rcard-stars">★★★★★</div>
-        <p>"The family combo pack is incredible value! Three types of fresh mushrooms at such a great price. We love supporting local farmers!"</p>
-        <div class="rcard-user"><div class="rcu-av">D</div><div><strong>Deepak Sahoo</strong><span>Cuttack, Odisha</span></div></div>
-      </div>
-      <div class="rcard">
-        <div class="rcard-stars">★★★★★</div>
-        <p>"Ordered for the first time and absolutely loved it. The milky mushrooms were so fresh and thick. Will be a regular customer now!"</p>
-        <div class="rcard-user"><div class="rcu-av">M</div><div><strong>Mithun Patro</strong><span>Rourkela, Odisha</span></div></div>
-      </div>
-    </div>
-  </div>
-  <div class="reviews-nav">
-    <button onclick="scrollReviews(-1)"><i class="fas fa-chevron-left"></i></button>
-    <button onclick="scrollReviews(1)"><i class="fas fa-chevron-right"></i></button>
-  </div>
-
-  <div class="review-form-card">
-    <h3>Share Your Experience ⭐</h3>
-    <div class="rf-inner">
-      <input type="text" id="rvName" placeholder="Your Name"/>
-      <div class="star-picker" id="starPicker">
-        <span onclick="pickStar(1)">★</span><span onclick="pickStar(2)">★</span>
-        <span onclick="pickStar(3)">★</span><span onclick="pickStar(4)">★</span>
-        <span onclick="pickStar(5)">★</span>
-      </div>
-      <textarea id="rvText" placeholder="Write your review..." rows="3"></textarea>
-      <button class="cta-main" onclick="submitReview()"><i class="fas fa-paper-plane"></i> Post Review</button>
-    </div>
-  </div>
-</section>
-
-<!-- ██████ CONTACT ██████ -->
-<section class="section contact-section" id="contact">
-  <div class="sec-head">
-    <div class="sec-tag"><i class="fas fa-phone"></i> Get In Touch</div>
-    <h2 class="sec-title">Contact <em>Triglow</em></h2>
-    <p class="sec-sub">Orders, queries, bulk purchasing — we're always here for you.</p>
-  </div>
-  <div class="contact-grid">
-    <div class="contact-info-col">
-      <div class="ci-item"><div class="ci-icon">📍</div><div><strong>Address</strong><p>Pokatunga, Bantala, Angul<br>Odisha, India – 759129</p></div></div>
-      <div class="ci-item"><div class="ci-icon">📞</div><div><strong>Phone / WhatsApp</strong><p>+91 XXXXX XXXXX</p></div></div>
-      <div class="ci-item"><div class="ci-icon">📧</div><div><strong>Email</strong><p>triglow.farm@gmail.com</p></div></div>
-      <div class="ci-item"><div class="ci-icon">🕐</div><div><strong>Business Hours</strong><p>Mon–Sat: 7AM – 7PM<br>Sunday: 8AM – 2PM</p></div></div>
-      <div class="map-box">
-        <div class="map-inner">
-          <i class="fas fa-map-marked-alt"></i>
-          <p><strong>Triglow Farm</strong></p>
-          <p>Pokatunga, Bantala, Angul, Odisha</p>
-          <a href="https://maps.google.com/?q=Bantala,Angul,Odisha" target="_blank" class="cta-ghost map-btn">
-            <i class="fas fa-external-link-alt"></i> Open Maps
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="contact-form-col">
-      <div class="cf-card">
-        <h3>Send a Message</h3>
-        <input type="text" id="cfName" placeholder="Your Name"/>
-        <input type="email" id="cfEmail" placeholder="Email Address"/>
-        <input type="tel" id="cfPhone" placeholder="Phone Number"/>
-        <textarea id="cfMsg" rows="4" placeholder="Your message..."></textarea>
-        <button class="cta-main" onclick="sendContact()"><i class="fas fa-paper-plane"></i> Send Message</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ██████ FOOTER ██████ -->
-<footer class="footer">
-  <div class="footer-wave">
-    <svg viewBox="0 0 1200 80" preserveAspectRatio="none"><path d="M0,40 C300,80 900,0 1200,40 L1200,80 L0,80 Z" fill="var(--surface)"/></svg>
-  </div>
-  <div class="footer-body">
-    <div class="footer-brand-col">
-      <div class="footer-logo">🍄 Triglow</div>
-      <p>Fresh, organic mushrooms grown with love in Pokatunga, Angul, Odisha. From our farm to your plate.</p>
-      <div class="footer-socials">
-        <a href="#" onclick="shareOn('facebook')" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" onclick="shareOn('instagram')" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" onclick="shareOn('whatsapp')" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="#" onclick="shareOn('twitter')" title="Twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" onclick="shareOn('telegram')" title="Telegram"><i class="fab fa-telegram"></i></a>
-      </div>
-    </div>
-    <div class="footer-links-col">
-      <h4>Navigate</h4>
-      <a href="#home">Home</a><a href="#products">Products</a>
-      <a href="#benefits">Benefits</a><a href="#gallery">Gallery</a>
-      <a href="#youtube">Watch</a><a href="#about">About Us</a>
-      <a href="#reviews">Reviews</a><a href="#contact">Contact</a>
-    </div>
-    <div class="footer-links-col">
-      <h4>Products</h4>
-      <a href="#products">Button Mushrooms</a>
-      <a href="#products">Oyster Mushrooms</a>
-      <a href="#products">Milky Mushrooms</a>
-      <a href="#products">Seasonal Varieties</a>
-      <a href="#products">Combo Packs</a>
-    </div>
-    <div class="footer-links-col">
-      <h4>Contact</h4>
-      <p>📍 Pokatunga, Bantala, Angul</p>
-      <p>📞 +91 XXXXX XXXXX</p>
-      <p>📧 triglow.farm@gmail.com</p>
-      <p>📌 PIN: 759129</p>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2024 <strong>Triglow</strong> | Crafted with ❤️ by Amulya, Ankit & Amit from Odisha</p>
-  </div>
-</footer>
-
-<!-- ████████████ FLOATING WINDOWS ████████████ -->
-
-<!-- AUTH WINDOW -->
-<div class="fwindow" id="authWindow">
-  <div class="fw-chrome">
-    <div class="fw-title-bar">
-      <div class="fw-dots"><span class="fd red" onclick="closeWindow('authWindow')"></span><span class="fd yellow"></span><span class="fd green"></span></div>
-      <span class="fw-title">🔐 Triglow Account</span>
-      <button class="fw-close-btn" onclick="closeWindow('authWindow')"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="fw-body">
-      <div class="auth-tabs">
-        <button class="at-btn active" id="atLogin" onclick="authTab('login')">Login</button>
-        <button class="at-btn" id="atSignup" onclick="authTab('signup')">Sign Up</button>
-      </div>
-      <div id="authLoginForm">
-        <div class="fw-logo">🍄 Triglow</div>
-        <h3>Welcome Back!</h3>
-        <p class="fw-sub">Login to your account</p>
-        <input type="text" class="fw-input" id="liUser" placeholder="Username"/>
-        <input type="password" class="fw-input" id="liPass" placeholder="Password"/>
-        <div class="fw-remember"><label><input type="checkbox"/> Remember me</label><a href="#">Forgot?</a></div>
-        <button class="cta-main fw-full" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
-        <p class="fw-switch">No account? <a onclick="authTab('signup')">Sign Up</a></p>
-      </div>
-      <div id="authSignupForm" style="display:none">
-        <div class="fw-logo">🍄 Triglow</div>
-        <h3>Join Us!</h3>
-        <p class="fw-sub">Create your Triglow account</p>
-        <input type="text" class="fw-input" id="suName" placeholder="Full Name"/>
-        <input type="email" class="fw-input" id="suEmail" placeholder="Email"/>
-        <input type="tel" class="fw-input" id="suPhone" placeholder="Phone Number"/>
-        <input type="password" class="fw-input" id="suPass" placeholder="Password"/>
-        <button class="cta-main fw-full" onclick="doSignup()"><i class="fas fa-user-plus"></i> Create Account</button>
-        <p class="fw-switch">Have account? <a onclick="authTab('login')">Login</a></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CART WINDOW -->
-<div class="fwindow" id="cartWindow">
-  <div class="fw-chrome wide-fw">
-    <div class="fw-title-bar">
-      <div class="fw-dots"><span class="fd red" onclick="closeWindow('cartWindow')"></span><span class="fd yellow"></span><span class="fd green"></span></div>
-      <span class="fw-title">🛒 Your Cart</span>
-      <button class="fw-close-btn" onclick="closeWindow('cartWindow')"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="fw-body">
-      <div id="cartItemsList" class="cart-list"></div>
-      <div id="cartEmptyMsg" class="cart-empty-state">
-        <div class="ces-icon">🧺</div>
-        <p>Your cart is empty!</p>
-        <button class="cta-main" onclick="closeWindow('cartWindow');scrollTo('#products')">Browse Products</button>
-      </div>
-      <div id="cartSummary" class="cart-summary" style="display:none">
-        <div class="cs-row"><span>Subtotal</span><span id="cSubtotal">₹0</span></div>
-        <div class="cs-row discount-row" id="discountRow" style="display:none"><span>Coin Discount 🪙</span><span id="discountAmt" class="green-text">-₹0</span></div>
-        <div class="cs-row total-row"><span>Total</span><strong id="cTotal">₹0</strong></div>
-        <div class="cs-coins-notice" id="csCoinsNotice"></div>
-        <button class="cta-main fw-full" onclick="checkout()"><i class="fas fa-credit-card"></i> Place Order</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- COINS WINDOW -->
-<div class="fwindow" id="coinsWindow">
-  <div class="fw-chrome">
-    <div class="fw-title-bar">
-      <div class="fw-dots"><span class="fd red" onclick="closeWindow('coinsWindow')"></span><span class="fd yellow"></span><span class="fd green"></span></div>
-      <span class="fw-title">🪙 Coin Wallet</span>
-      <button class="fw-close-btn" onclick="closeWindow('coinsWindow')"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="fw-body">
-      <div class="cw-balance">
-        <div class="cw-coin-anim">🪙</div>
-        <div class="cw-bal-num" id="cwBalNum">0</div>
-        <div class="cw-bal-label">Total Coins</div>
-        <div class="cw-worth">Worth ₹<span id="cwWorth">0.00</span></div>
-      </div>
-      <div class="cw-progress">
-        <div class="cw-prog-label">Progress to next ₹5 discount</div>
-        <div class="cw-prog-bar"><div class="cw-prog-fill" id="cwProgFill"></div></div>
-        <div class="cw-prog-text"><span id="cwProgText">0 / 100 coins</span></div>
-      </div>
-      <div class="cw-history" id="cwHistory">
-        <div class="cwh-empty">No coins earned yet. Start sharing!</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ████████ AI CHATBOT ████████ -->
-<div class="chatbot-fab" id="chatFab" onclick="toggleChat()">
-  <div class="chatfab-icon">🤖</div>
-  <div class="chatfab-pulse"></div>
-  <div class="chatfab-label">AI Help</div>
-</div>
-
-<div class="chatbot-window" id="chatWindow">
-  <div class="cw-header">
-    <div class="cwh-left">
-      <div class="bot-avatar">🍄</div>
-      <div><div class="bot-name">Triglow AI</div><div class="bot-status"><span class="status-dot"></span> Online</div></div>
-    </div>
-    <button class="cwh-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="cw-messages" id="chatMessages">
-    <div class="msg bot-msg">
-      <div class="msg-bubble">👋 Hi! I'm Triglow AI — your farming assistant! Ask me anything about our mushrooms, prices, farming, health benefits, or how to order! 🍄</div>
-    </div>
-  </div>
-  <div class="cw-quick-btns">
-    <button onclick="quickChat('What mushrooms do you sell?')">Products?</button>
-    <button onclick="quickChat('How to order?')">Order?</button>
-    <button onclick="quickChat('What are the prices?')">Prices?</button>
-    <button onclick="quickChat('Health benefits of mushrooms?')">Benefits?</button>
-    <button onclick="quickChat('How to earn coins?')">Coins?</button>
-  </div>
-  <div class="cw-input-wrap">
-    <input type="text" id="chatInput" placeholder="Ask anything about Triglow..." onkeydown="if(event.key==='Enter')sendChat()"/>
-    <button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast-stack" id="toastStack"></div>
-
-<!-- SCROLL TOP -->
-<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-  <i class="fas fa-arrow-up"></i>
-</button>
-
-<script src="script.js"></script>
-</body>
-</html>
+    <div class="bcard"><div 
